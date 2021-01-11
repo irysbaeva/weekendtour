@@ -8,8 +8,9 @@ export const descriptionAdded = (e) => ({
 export const priceAdded = (e) => ({ type: "ADD_PRICE", payload: e });
 export const includesAdded = (e) => ({ type: "ADD_INCLUDES", payload: e });
 export const companyAdded = (e) => ({ type: "ADD_COMPANY", payload: e });
-export const addedNewTour = () => ({ type: "ADD_NEW_TOUR" });
-export const updateTours = () => ({ type: "UPDATE_TOURS" });
+export const addNewTour = () => ({
+  type: "ADD_NEW_TOUR",
+});
 
 const toursLoaded = (newTours) => {
   return { type: "FETCH_TOURS_SUCCESS", payload: newTours };
@@ -27,6 +28,6 @@ export const fetchTours = (tourService, dispatch) => () => {
   dispatch(toursRequested());
   tourService
     .getTours()
-    .then((data) => dispatch(toursLoaded(data)))
+    .then(({ data }) => dispatch(toursLoaded(data)))
     .catch((err) => dispatch(toursError(err)));
 };

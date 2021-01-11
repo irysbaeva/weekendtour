@@ -10,7 +10,7 @@ import Typography from "@material-ui/core/Typography";
 import AddTourForm from "./add-tour-form";
 import AddTourReview from "./add-tour-review";
 import { connect } from "react-redux";
-import { addedNewTour, updateTours } from "../redux/actions";
+import { addNewTour } from "../redux/actions";
 
 const useStyles = makeStyles((theme) => ({
   appBar: {
@@ -62,7 +62,7 @@ function getStepContent(step) {
   }
 }
 
-function AddTour({ newTour, addedNewTour, updateTours }) {
+function AddTour({ newTour, addNewTour, fetchAddTour }) {
   const classes = useStyles();
   const [activeStep, setActiveStep] = React.useState(0);
 
@@ -111,9 +111,8 @@ function AddTour({ newTour, addedNewTour, updateTours }) {
                     color="primary"
                     onClick={() => {
                       handleNext();
-                      addedNewTour();
                       if (activeStep === steps.length - 1) {
-                        updateTours();
+                        addNewTour();
                       }
                     }}
                     className={classes.button}
@@ -135,7 +134,7 @@ const mapStateToProps = ({ newTour }) => {
 };
 
 const mapDispatchToProps = {
-  addedNewTour,
-  updateTours,
+  addNewTour,
 };
+
 export default connect(mapStateToProps, mapDispatchToProps)(AddTour);

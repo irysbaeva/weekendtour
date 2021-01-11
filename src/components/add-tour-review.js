@@ -18,17 +18,17 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function AddTourReview ({
-  title,
-  startDate,
-  endDate,
-  description,
-  price,
-  includes,
-  company,
-}) {
+function AddTourReview({ newTour }) {
   const classes = useStyles();
-
+  const {
+    title,
+    startDate,
+    endDate,
+    description,
+    price,
+    includes,
+    company,
+  } = newTour;
   return (
     <React.Fragment>
       <Typography variant="h6" gutterBottom>
@@ -62,24 +62,10 @@ function AddTourReview ({
   );
 }
 
-const mapStateToProps = ({
-  title,
-  startDate,
-  endDate,
-  description,
-  price,
-  includes,
-  company,
-}) => {
+const mapStateToProps = ({ newTour }) => {
   return {
-    title,
-    startDate,
-    endDate,
-    description,
-    price,
-    includes,
-    company,
+    newTour,
   };
 };
 
-export default connect(mapStateToProps)(AddTourReview );
+export default connect(mapStateToProps)(AddTourReview);
