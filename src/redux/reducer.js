@@ -3,6 +3,7 @@ let initialState = {
   loading: true,
   error: null,
   newTour: {
+    id: null,
     title: null,
     startDate: null,
     endDate: null,
@@ -10,12 +11,23 @@ let initialState = {
     price: null,
     includes: null,
     company: null,
+     image: null
   },
+  fullDescription: {
+    id: null,
+    title: null,
+    startDate: null,
+    endDate: null,
+    description: null,
+    price: null,
+    includes: null,
+    company: null,
+    image:null
+  },
+  
+ 
 };
 
-const updateTours = (tours, item, idx) => {
-  return [...tours.slice(0, idx), item];
-};
 const reducer = (state = initialState, action) => {
   switch (action.type) {
     case "FETCH_TOURS_REQUEST":
@@ -32,6 +44,21 @@ const reducer = (state = initialState, action) => {
         tours: action.payload,
         loading: false,
         error: null,
+      };
+    case "FETCH_TOUR_SUCCESS":
+      return {
+        ...state,
+        fullDescription: {
+          id: action.payload.id,
+          title: action.payload.title,
+          startDate: action.payload.startDate,
+          endDate: action.payload.endDate,
+          description: action.payload.description,
+          price: action.payload.price,
+          includes: action.payload.includes,
+          company: action.payload.company,
+          image: action.payload.image
+        },
       };
 
     case "FETCH_TOURS_FAILURE":
@@ -76,21 +103,10 @@ const reducer = (state = initialState, action) => {
         ...state,
         newTour: { ...state.newTour, company: action.payload },
       };
-
-    case "ADD_NEW_TOUR":
+    case "ADD_IMAGE":
       return {
         ...state,
-        newTour: {
-          title: null,
-          startDate: null,
-          endDate: null,
-          description: null,
-          price: null,
-          includes: null,
-          company: null,
-        },
-
-        tours: updateTours(state.tours, state.newTour, state.tours.length),
+        newTour: { ...state.newTour, image: action.payload },
       };
 
     default:

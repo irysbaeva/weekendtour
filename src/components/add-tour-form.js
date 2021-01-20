@@ -3,6 +3,7 @@ import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
 import { connect } from "react-redux";
+import UploadImage from "./upload"
 
 import {
   titleAdded,
@@ -105,6 +106,10 @@ const AddTourForm = ({
             autoComplete="shipping postal-code"
             onChange={(e) => companyAdded(e.target.value)}
           />
+        </Grid>
+        <Grid item xs={12}>
+      
+        {/* <UploadImage  /> */}
         </Grid>
 
         <Grid item xs={12}></Grid>

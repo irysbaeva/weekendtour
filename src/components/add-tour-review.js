@@ -28,6 +28,7 @@ function AddTourReview({ newTour }) {
     price,
     includes,
     company,
+    image
   } = newTour;
   return (
     <React.Fragment>
@@ -36,27 +37,30 @@ function AddTourReview({ newTour }) {
       </Typography>
 
       <List disablePadding>
-        <ListItem className={classes.listItem} key={title}>
+        <ListItem className={classes.listItem} key={"Маршрут"}>
           <ListItemText primary={"Маршрут"} secondary={title} />
         </ListItem>
-        <ListItem className={classes.listItem} key={startDate}>
+        <ListItem className={classes.listItem} key={"Дата начала"}>
           <ListItemText primary={"Дата начала"} secondary={startDate} />
         </ListItem>
-        <ListItem className={classes.listItem} key={endDate}>
+        <ListItem className={classes.listItem} key={"Дата окончания"}>
           <ListItemText primary={"Дата окончания"} secondary={endDate} />
         </ListItem>
-        <ListItem className={classes.listItem} key={description}>
+        <ListItem className={classes.listItem} key={"Описание"}>
           <ListItemText primary={"Описание"} secondary={description} />
         </ListItem>
-        <ListItem className={classes.listItem} key={includes}>
+        <ListItem className={classes.listItem} key={"Включено"}>
           <ListItemText primary={"Включено"} secondary={includes} />
         </ListItem>
-        <ListItem className={classes.listItem} key={price}>
+        <ListItem className={classes.listItem} key={"Стоимость"}>
           <ListItemText primary={"Стоимость"} secondary={price} />
         </ListItem>
-        <ListItem className={classes.listItem} key={company}>
+        <ListItem className={classes.listItem} key={"Организатор"}>
           <ListItemText primary={"Организатор"} secondary={company} />
         </ListItem>
+        <ListItem className={classes.listItem} key={"Картинка"}>
+          {/* <ListItemText primary={"Картинка"} secondary={image.name} />  */}
+         </ListItem> 
       </List>
     </React.Fragment>
   );

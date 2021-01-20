@@ -8,14 +8,16 @@ import img from "../pic.webp";
 import Cards from "./cards";
 import AddTour from "./add-tour-main";
 import { Link } from "react-router-dom";
+import { connect } from "react-redux";
 
 const useStyles = makeStyles((theme) => ({
-  heroContent: {
+  root: {
     // backgroundColor: theme.palette.background.paper,
     padding: theme.spacing(8, 0, 6),
     backgroundImage: `url(${img})`,
     backgroundSize: "cover",
   },
+
   header: {
     color: "white",
   },
@@ -28,12 +30,12 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function HomePage() {
+const HomePage = ({ newTour }) => {
   const classes = useStyles();
 
   return (
     <div>
-      <div className={classes.heroContent}>
+      <div className={classes.root}>
         <Container maxWidth="sm">
           <Typography
             className={classes.header}
@@ -75,4 +77,12 @@ export default function HomePage() {
       <AddTour />
     </div>
   );
-}
+};
+
+const mapStateToProps = ({ image }) => {
+  return {
+    image,
+  };
+};
+
+export default connect(mapStateToProps)(HomePage);

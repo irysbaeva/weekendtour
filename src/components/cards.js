@@ -12,10 +12,12 @@ import Container from "@material-ui/core/Container";
 import img from "../pic.webp";
 import { fetchTours } from "../redux/actions";
 import { useEffect } from "react";
+import { useHistory } from "react-router-dom";
 import compose from "../compose";
 import withTourService from "../with-tour-service";
 import ErrorIndicator from "./error-indicator";
 import Spinner from "./spinner";
+import tourService from "../tour-service";
 
 const useStyles = makeStyles((theme) => ({
   cardGrid: {
@@ -28,7 +30,7 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: "column",
   },
   cardMedia: {
-    paddingTop: "56.25%", // 16:9
+    paddingTop: "56.25%",
   },
   cardContent: {
     flexGrow: 1,
@@ -37,8 +39,10 @@ const useStyles = makeStyles((theme) => ({
 
 const Cards = ({ tours, fetchTours, loading, error }) => {
   const classes = useStyles();
-  useEffect(() => fetchTours(), []);
-
+  const history = useHistory();
+  useEffect(() => {
+    fetchTours();
+  }, [fetchTours]);
 
   if (loading) {
     return <Spinner />;
@@ -46,11 +50,22 @@ const Cards = ({ tours, fetchTours, loading, error }) => {
   if (error) {
     return <ErrorIndicator />;
   }
+
+  const redirect = (id) => {
+    history.push(`tours/${id}`);
+  };
+  const deleteTour = async (id) => {
+    await tourService.deleteTour(id);
+    fetchTours();
+  };
+
+
+
   return (
     <Container className={classes.cardGrid} maxWidth="md">
       <Grid container spacing={4}>
-        {tours.map(({ card, title,  startDate, endDate,price }) => (
-          <Grid item key={card} xs={12} sm={6} md={4}>
+        {tours.map(({ title, startDate, endDate, price, id, image }) => (
+          <Grid item key={title} xs={12} sm={6} md={4}>
             <Card className={classes.card}>
               <CardMedia
                 className={classes.cardMedia}
@@ -61,15 +76,29 @@ const Cards = ({ tours, fetchTours, loading, error }) => {
                 <Typography gutterBottom variant="h5" component="h2">
                   {title}
                 </Typography>
-                <Typography>{startDate} - {endDate}</Typography>
+                <Typography>
+                  {startDate} - {endDate}
+                </Typography>
                 <Typography>{price} рублей</Typography>
               </CardContent>
               <CardActions>
-                <Button size="small" color="primary">
+                <Button
+                  size="small"
+                  color="primary"
+                  onClick={() => {
+                    redirect(id);
+                  }}
+                >
                   Подробнее
                 </Button>
-                <Button size="small" color="primary">
-                  Забронировать
+                <Button
+                  onClick={() => {
+                    deleteTour(id);
+                  }}
+                  size="small"
+                  color="primary"
+                >
+                  Удалить
                 </Button>
               </CardActions>
             </Card>

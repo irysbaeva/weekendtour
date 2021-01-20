@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 mongoose.connect("mongodb://localhost/tours");
 const Tour = mongoose.model("Tour", {
-  card: Number,
+  id: String,
   title: String,
   startDate: String,
   endDate: String,
@@ -9,5 +9,6 @@ const Tour = mongoose.model("Tour", {
   includes: String,
   price: Number,
   company: String,
+  image: String
 });
-module.exports= Tour;
+module.exports = Tour;

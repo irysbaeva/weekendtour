@@ -7,6 +7,8 @@ import HomePage from "./homepage";
 import Footer from "./footer";
 import AddTour from "./add-tour-main";
 import Login from "./login";
+import TourDescription from "./tour-description"
+
 
 export default function App() {
   return (
@@ -15,10 +17,22 @@ export default function App() {
       <NavBar />
       <main>
         <Switch>
-          <Route path="/" component={HomePage} exact />
-          <Route path="/tours" component={Cards} exact />
-          <Route path="/tours/new" component={AddTour} />
-          <Route path="/login" component={Login} />
+          <Route path="/" exact>
+            <HomePage />{" "}
+          </Route>
+          <Route path="/tours" exact>
+            <Cards />
+          </Route>
+          <Route path="/tours/new">
+            <AddTour />
+          </Route>
+          <Route path="/tours/:id">
+           <TourDescription/>
+          </Route>
+          <Route path="/login">
+            <Login />
+          </Route>
+
         </Switch>
       </main>
       <Footer />

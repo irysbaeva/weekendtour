@@ -10,7 +10,9 @@ import Typography from "@material-ui/core/Typography";
 import AddTourForm from "./add-tour-form";
 import AddTourReview from "./add-tour-review";
 import { connect } from "react-redux";
-import { addNewTour } from "../redux/actions";
+import compose from "../compose";
+import withTourService from "../with-tour-service";
+import { fetchTours, fetchNewTour } from "../redux/actions";
 
 const useStyles = makeStyles((theme) => ({
   appBar: {
@@ -62,7 +64,7 @@ function getStepContent(step) {
   }
 }
 
-function AddTour({ newTour, addNewTour, fetchAddTour }) {
+function AddTour({ newTour, fetchNewTour, fetchTours }) {
   const classes = useStyles();
   const [activeStep, setActiveStep] = React.useState(0);
 
@@ -93,7 +95,6 @@ function AddTour({ newTour, addNewTour, fetchAddTour }) {
             {activeStep === steps.length ? (
               <React.Fragment>
                 <Typography variant="h5" gutterBottom>
-                  {/* {newTour.title} */}
                   Тур добавлен
                 </Typography>
               </React.Fragment>
@@ -109,10 +110,11 @@ function AddTour({ newTour, addNewTour, fetchAddTour }) {
                   <Button
                     variant="contained"
                     color="primary"
-                    onClick={() => {
+                    onClick={async () => {
                       handleNext();
                       if (activeStep === steps.length - 1) {
-                        addNewTour();
+                        await fetchNewTour(newTour);
+                        fetchTours();
                       }
                     }}
                     className={classes.button}
@@ -133,8 +135,15 @@ const mapStateToProps = ({ newTour }) => {
   return { newTour };
 };
 
-const mapDispatchToProps = {
-  addNewTour,
+const mapDispatchToProps = (dispatch, ownProps) => {
+  const { tourService } = ownProps;
+  return {
+    fetchNewTour: fetchNewTour(tourService, dispatch),
+    fetchTours: fetchTours(tourService, dispatch),
+  };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(AddTour);
+export default compose(
+  withTourService(),
+  connect(mapStateToProps, mapDispatchToProps)
+)(AddTour);
