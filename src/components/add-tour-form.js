@@ -109,7 +109,7 @@ const AddTourForm = ({
         </Grid>
         <Grid item xs={12}>
       
-        {/* <UploadImage  /> */}
+        <UploadImage  />
         </Grid>
 
         <Grid item xs={12}></Grid>

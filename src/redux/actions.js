@@ -61,15 +61,12 @@ export const fetchTour = (tourService, dispatch) => (id) => {
     .catch((err) => dispatch(toursError(err)));
 };
 
-// const fileUploadHandler = () => {
-//     const fd = new FormData();
-//     fd.append("image", files, files.name);
-//     axios.post("/tours",fd).then((res) => console.log(res));
-//   };
 export const fetchNewTour = (tourService, dispatch) => (data) => {
   tourService
     .addTour(data)
-    .then(dispatch(toursRequested()))
-    .catch((err) => console.log(err));
+    // .then(dispatch(toursRequested()))
+    // .then(data=>console.log(data)
+    // )
+    // .catch((err) => console.log(err));
 };
 

@@ -61,10 +61,9 @@ app.delete("/tours/:id", (req, res) => {
 //   });
 // });
 
-app.post("/tours", 
-// upload.single("image"),
- (req, res) => {
+app.post("/tours", upload.single("image"), (req, res) => {
   console.log(req.file);
+console.log(req.body.title);
 
   const data = req.body;
   const tour = new Tour({
@@ -75,7 +74,7 @@ app.post("/tours",
     includes: data.includes,
     price: data.price,
     company: data.company,
-    // image: req.file.path,
+    image: req.file.path,
   });
   tour.save().then(() => res.send(({ status: "ok" })));
 });

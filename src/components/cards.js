@@ -10,6 +10,7 @@ import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import img from "../pic.webp";
+import way from "./way.jpg";
 import { fetchTours } from "../redux/actions";
 import { useEffect } from "react";
 import { useHistory } from "react-router-dom";
@@ -59,10 +60,9 @@ const Cards = ({ tours, fetchTours, loading, error }) => {
     fetchTours();
   };
 
-
-
   return (
     <Container className={classes.cardGrid} maxWidth="md">
+      {console.log(tours)}
       <Grid container spacing={4}>
         {tours.map(({ title, startDate, endDate, price, id, image }) => (
           <Grid item key={title} xs={12} sm={6} md={4}>
@@ -72,6 +72,7 @@ const Cards = ({ tours, fetchTours, loading, error }) => {
                 image={img}
                 title="Image title"
               />
+
               <CardContent className={classes.cardContent}>
                 <Typography gutterBottom variant="h5" component="h2">
                   {title}

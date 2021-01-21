@@ -7,7 +7,7 @@ const Tour = mongoose.model("Tour", {
   endDate: String,
   description: String,
   includes: String,
-  price: Number,
+  price: String,
   company: String,
   image: String
 });
