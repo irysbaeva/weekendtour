@@ -9,7 +9,7 @@ import ErrorBoundry from "./components/error-boundry";
 import store from "./store";
 
 ReactDOM.render(
-  <React.StrictMode>
+  // <React.StrictMode>
     <Provider store={store}>
       <ErrorBoundry>
         <TourServiceProvider value={tourService}>
@@ -19,6 +19,7 @@ ReactDOM.render(
         </TourServiceProvider>
       </ErrorBoundry>
     </Provider>
-  </React.StrictMode>,
+  // </React.StrictMode>
+  ,
   document.getElementById("root")
 );

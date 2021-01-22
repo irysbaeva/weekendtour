@@ -9,8 +9,6 @@ import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
-import img from "../pic.webp";
-import way from "./way.jpg";
 import { fetchTours } from "../redux/actions";
 import { useEffect } from "react";
 import { useHistory } from "react-router-dom";
@@ -60,16 +58,17 @@ const Cards = ({ tours, fetchTours, loading, error }) => {
     fetchTours();
   };
 
+  
+
   return (
     <Container className={classes.cardGrid} maxWidth="md">
-      {console.log(tours)}
       <Grid container spacing={4}>
         {tours.map(({ title, startDate, endDate, price, id, image }) => (
           <Grid item key={title} xs={12} sm={6} md={4}>
             <Card className={classes.card}>
               <CardMedia
                 className={classes.cardMedia}
-                image={img}
+                image={`http://localhost:3333/${image}`}
                 title="Image title"
               />
 
@@ -92,6 +91,7 @@ const Cards = ({ tours, fetchTours, loading, error }) => {
                 >
                   Подробнее
                 </Button>
+             
                 <Button
                   onClick={() => {
                     deleteTour(id);

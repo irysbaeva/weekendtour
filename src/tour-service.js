@@ -8,14 +8,13 @@ const tourService = {
     let config = {
       header: { "content-type": "multipart/form-data" },
     };
-
     for (let key in data) {
       fd.append(key, data[key]);
     }
-
     axios.post("tours", fd, config);
   },
   getTour: (id) => axios.get(`tours/${id}`),
+  editTour: (id,data) => axios.put(`tours/${id}/edit`,data),
   deleteTour: (id) => axios.delete(`tours/${id}`, { data: { _id: id } }),
 };
 

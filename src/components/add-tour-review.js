@@ -28,8 +28,38 @@ function AddTourReview({ newTour }) {
     price,
     includes,
     company,
-    image
   } = newTour;
+
+  const tour = [
+    {
+      primary: "Маршрут",
+      secondary: title,
+    },
+    {
+      primary: "Дата начала",
+      secondary: startDate,
+    },
+    {
+      primary: "Дата окончания",
+      secondary: endDate,
+    },
+    {
+      primary: "Описание",
+      secondary: description,
+    },
+    {
+      primary: "Включено",
+      secondary: includes,
+    },
+    {
+      primary: "Стоимость",
+      secondary: price,
+    },
+    {
+      primary: "Организатор",
+      secondary: company,
+    },
+  ];
   return (
     <React.Fragment>
       <Typography variant="h6" gutterBottom>
@@ -37,30 +67,13 @@ function AddTourReview({ newTour }) {
       </Typography>
 
       <List disablePadding>
-        <ListItem className={classes.listItem} key={"Маршрут"}>
-          <ListItemText primary={"Маршрут"} secondary={title} />
-        </ListItem>
-        <ListItem className={classes.listItem} key={"Дата начала"}>
-          <ListItemText primary={"Дата начала"} secondary={startDate} />
-        </ListItem>
-        <ListItem className={classes.listItem} key={"Дата окончания"}>
-          <ListItemText primary={"Дата окончания"} secondary={endDate} />
-        </ListItem>
-        <ListItem className={classes.listItem} key={"Описание"}>
-          <ListItemText primary={"Описание"} secondary={description} />
-        </ListItem>
-        <ListItem className={classes.listItem} key={"Включено"}>
-          <ListItemText primary={"Включено"} secondary={includes} />
-        </ListItem>
-        <ListItem className={classes.listItem} key={"Стоимость"}>
-          <ListItemText primary={"Стоимость"} secondary={price} />
-        </ListItem>
-        <ListItem className={classes.listItem} key={"Организатор"}>
-          <ListItemText primary={"Организатор"} secondary={company} />
-        </ListItem>
-        <ListItem className={classes.listItem} key={"Картинка"}>
-          {/* <ListItemText primary={"Картинка"} secondary={image.name} />  */}
-         </ListItem> 
+        {tour.map((el) => {
+          return (
+            <ListItem className={classes.listItem} key={el.primary}>
+              <ListItemText primary={el.primary} secondary={el.secondary} />
+            </ListItem>
+          );
+        })}
       </List>
     </React.Fragment>
   );

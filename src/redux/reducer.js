@@ -23,8 +23,7 @@ let initialState = {
     includes: null,
     company: null,
     image:null
-  },
-  
+  }
  
 };
 

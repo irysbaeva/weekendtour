@@ -5,7 +5,7 @@ import Toolbar from "@material-ui/core/Toolbar";
 import { Link } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 
-const menu = ["Главная", "Календарь туров", "Добавить тур", "Login"];
+const menu = ["Главная", "График туров", "Добавить тур", "Login"];
 
 const useStyles = makeStyles(() => ({
   link: {

@@ -3,7 +3,7 @@ import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
 import { connect } from "react-redux";
-import UploadImage from "./upload"
+import UploadImage from "./upload";
 
 import {
   titleAdded,
@@ -37,7 +37,6 @@ const AddTourForm = ({
             name="title"
             label="Маршрут"
             fullWidth
-            autoComplete="shipping address-line1"
             onChange={(e) => titleAdded(e.target.value)}
           />
         </Grid>
@@ -47,9 +46,14 @@ const AddTourForm = ({
             id="startDate"
             name="startDate"
             label="Дата начала"
-            onChange={(e) => startDateAdded(e.target.value)}
+            type="date"
+            InputLabelProps={{
+              shrink: true,
+            }}
+            onChange={(e) => {
+              startDateAdded(e.target.value);
+            }}
             fullWidth
-            autoComplete="given-name"
           />
         </Grid>
         <Grid item xs={12} sm={6}>
@@ -58,8 +62,11 @@ const AddTourForm = ({
             id="endDate"
             name="endDate"
             label="Дата окончания"
+            type="date"
+            InputLabelProps={{
+              shrink: true,
+            }}
             fullWidth
-            autoComplete="family-name"
             onChange={(e) => endDateAdded(e.target.value)}
           />
         </Grid>
@@ -69,7 +76,6 @@ const AddTourForm = ({
             name="description"
             label="Описание тура"
             fullWidth
-            autoComplete="shipping address-line2"
             onChange={(e) => descriptionAdded(e.target.value)}
           />
         </Grid>
@@ -80,7 +86,6 @@ const AddTourForm = ({
             name="includes"
             label="В стоимость включено"
             fullWidth
-            autoComplete="shipping address-level2"
             onChange={(e) => includesAdded(e.target.value)}
           />
         </Grid>
@@ -92,7 +97,6 @@ const AddTourForm = ({
             name="price"
             label="Стоимость"
             fullWidth
-            autoComplete="shipping postal-code"
             onChange={(e) => priceAdded(e.target.value)}
           />
         </Grid>
@@ -103,13 +107,13 @@ const AddTourForm = ({
             name="companyName"
             label="Организатор"
             fullWidth
-            autoComplete="shipping postal-code"
             onChange={(e) => companyAdded(e.target.value)}
           />
         </Grid>
         <Grid item xs={12}>
-      
-        <UploadImage  />
+          <div>
+            <UploadImage />
+          </div>
         </Grid>
 
         <Grid item xs={12}></Grid>
