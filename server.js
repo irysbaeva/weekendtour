@@ -1,11 +1,15 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
-const Tour = require("./model");
+const Tour = require("./tourModel");
+const User = require("./userModel");
 const stringify = require("json-stringify-safe");
 const cors = require("cors");
 const multer = require("multer");
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 const app = express();
+const checkAuth = require("./check-auth");
 
 app.use("/uploads", express.static("uploads"));
 
@@ -39,10 +43,12 @@ app.get("/tours", (req, res) => {
 
 app.get("/tours/:id", (req, res) => {
   const { id } = req.params;
+  console.log(id);
+
   stringify(Tour.findById(id).then((data) => res.send(data)));
 });
 
-app.delete("/tours/:id", (req, res) => {
+app.delete("/tours/:id", checkAuth, (req, res) => {
   const { id } = req.params;
   Tour.deleteOne({ _id: id }).then((tour) => {
     if (tour) {
@@ -52,14 +58,14 @@ app.delete("/tours/:id", (req, res) => {
     }
   });
 });
-app.get("/tours/:id/edit", (req, res) => {
+app.get("/tours/:id/edit", checkAuth, (req, res) => {
   const { id } = req.params;
   stringify(Tour.findById(id).then((data) => res.send(data)));
 });
 
 app.put("/tours/:id/edit", (req, res) => {
   console.log(req.params.id);
-  
+
   Tour.findByIdAndUpdate(req.params.id, { $set: req.body }, (err) => {
     if (err) {
       res.send(err);
@@ -68,13 +74,14 @@ app.put("/tours/:id/edit", (req, res) => {
   });
 });
 
-app.post("/tours", upload.single("image"), (req, res) => {
+app.post("/tours", checkAuth, upload.single("image"), (req, res) => {
   console.log(req.file);
   console.log(req.body.startDate);
   const path = req.file ? req.file.path : null;
 
   const data = req.body;
   const tour = new Tour({
+    _id: new mongoose.Types.ObjectId(),
     title: data.title,
     startDate: data.startDate,
     endDate: data.endDate,
@@ -84,18 +91,82 @@ app.post("/tours", upload.single("image"), (req, res) => {
     company: data.company,
     image: path,
   });
-  tour.save()
-  .then(() => res.send({ status: "ok" }))
-    // .then(( tour) => {
-    //   
-    //   res.redirect("/");
-    // })
-    // .catch((err) => {
-    // 
-    //   console.log(err);
-    //   res.send(400, "Bad Request");
- 
-    // });
+  tour
+    .save()
+    .then(() => res.send({ status: "ok" }))
+    .catch((err) => {
+      res.send(err);
+    });
+});
+
+app.post("/signup", (req, res) => {
+  console.log(req.body.email);
+  User.find({ email: req.body.email })
+    .exec()
+    .then((user) => {
+      if (user.length >= 1) {
+        return res.status(409).json({ message: "Mail exists" });
+      } else {
+        bcrypt.hash(req.body.password, 10, (err, hash) => {
+          if (err) {
+            return res.status(500).json({
+              error: err,
+            });
+          } else {
+            const user = new User({
+              _id: new mongoose.Types.ObjectId(),
+              company: req.body.company,
+              email: req.body.email,
+              password: hash,
+            });
+            user
+              .save()
+              .then((result) => {
+                console.log(result);
+                res.status(201).json({ message: "User created" });
+              })
+              .catch((err) => {
+                console.log(err);
+                res.status(500).json({ error: err });
+              });
+          }
+        });
+      }
+    });
+});
+
+app.post("/login", (req, res) => {
+  console.log(req.body.email);
+  
+  User.find({ email: req.body.email })
+    .exec()
+    .then((user) => {
+      if (user.length < 1) {
+        return res.status(401).json({ message: "Auth failed" });
+      }
+      bcrypt.compare(req.body.password, user[0].password, (err, result) => {
+        if (err) {
+          return res.status(401).json({
+            message: "Auth failed",
+          });
+        }
+        if (result) {
+          const token = jwt.sign(
+            { email: user[0].email, userId: user[0]._id },
+            "secret",
+            { expiresIn: "1h" }
+          );
+          return res
+            .status(200)
+            .json({ message: "Auth succesful", token: token });
+        }
+        res.status(401).json({ message: "Auth failed" });
+      });
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(500).json({ error: err });
+    });
 });
 
 app.listen(3333, () => {

@@ -57,6 +57,7 @@ const TourDescription = ({ fullDescription, fetchTour }) => {
   useEffect(() => {
     fetchTour(id);
   }, [fetchTour, id]);
+console.log(fullDescription );
 
   const redirectToEditTour = (id) => {
     history.push(`${id}/edit`);

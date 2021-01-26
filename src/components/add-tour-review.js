@@ -30,6 +30,7 @@ function AddTourReview({ newTour }) {
     company,
   } = newTour;
 
+ 
   const tour = [
     {
       primary: "Маршрут",

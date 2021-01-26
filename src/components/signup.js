@@ -10,7 +10,7 @@ import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
-import { fetchLogin } from "../redux/actions";
+import { fetchNewUser } from "../redux/actions";
 import { connect } from "react-redux";
 import compose from "../compose";
 import withTourService from "../with-tour-service";
@@ -35,16 +35,19 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Login = ({ fetchLogin }) => {
+const SignUp = ({ fetchNewUser }) => {
   const classes = useStyles();
   const history = useHistory();
-  const [user, setUser] = useState({});
+  const [newUser, setNewUser] = useState({});
 
+  const onCompanyAdded = (companyName) => {
+    setNewUser({ ...newUser, company: companyName });
+  };
   const onEmailAdded = (email) => {
-    setUser({ ...user, email: email });
+    setNewUser({ ...newUser, email: email });
   };
   const onPasswordAdded = (password) => {
-    setUser({ ...user, password: password });
+    setNewUser({ ...newUser, password: password });
   };
 
   const redirect = () => {
@@ -59,10 +62,22 @@ const Login = ({ fetchLogin }) => {
           <LockOutlinedIcon />
         </Avatar>
         <Typography component="h1" variant="h5">
-          Login
+          Sign up
         </Typography>
         <form className={classes.form} noValidate>
           <Grid container spacing={2}>
+            <Grid item xs={12}>
+              <TextField
+                name="company"
+                variant="outlined"
+                required
+                fullWidth
+                id="company"
+                label="Название компании"
+                autoFocus
+                onChange={(e) => onCompanyAdded(e.target.value)}
+              />
+            </Grid>
             <Grid item xs={12}>
               <TextField
                 variant="outlined"
@@ -101,24 +116,19 @@ const Login = ({ fetchLogin }) => {
             variant="contained"
             color="primary"
             className={classes.submit}
-            onClick={(event) => {
-              console.log(user);
-              event.preventDefault();
-              fetchLogin(user);
+            onClick={(e) => {
+              e.preventDefault();
+              console.log(newUser);
+              fetchNewUser(newUser);
               redirect();
             }}
           >
-            login
+            Зарегистрироваться
           </Button>
-          <Grid container>
-            <Grid item xs>
-              <Link href="#" variant="body2">
-                Forgot password?
-              </Link>
-            </Grid>
+          <Grid container justify="flex-end">
             <Grid item>
-              <Link href="/signup" variant="body2">
-                {"Don't have an account? Sign Up"}
+              <Link href="/login" variant="body2">
+                Already have an account? Sign in
               </Link>
             </Grid>
           </Grid>
@@ -133,14 +143,14 @@ const mapStateToProps = (state) => {
   return state;
 };
 
-const mapDispatchToProps = (dispatch, ownProps) => {
+const mapDispatchToProps = (dispatch,ownProps) => {
   const { tourService } = ownProps;
   return {
-    fetchLogin: fetchLogin(tourService),
+    fetchNewUser: fetchNewUser(tourService),
   };
 };
 
 export default compose(
   withTourService(),
   connect(mapStateToProps, mapDispatchToProps)
-)(Login);
+)(SignUp);

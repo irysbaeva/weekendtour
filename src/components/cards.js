@@ -58,7 +58,6 @@ const Cards = ({ tours, fetchTours, loading, error }) => {
     fetchTours();
   };
 
-  
 
   return (
     <Container className={classes.cardGrid} maxWidth="md">
@@ -79,7 +78,7 @@ const Cards = ({ tours, fetchTours, loading, error }) => {
                 <Typography>
                   {startDate} - {endDate}
                 </Typography>
-                <Typography>{price} рублей</Typography>
+                <Typography>{price} руб.</Typography>
               </CardContent>
               <CardActions>
                 <Button

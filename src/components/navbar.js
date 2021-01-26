@@ -5,7 +5,7 @@ import Toolbar from "@material-ui/core/Toolbar";
 import { Link } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 
-const menu = ["Главная", "График туров", "Добавить тур", "Login"];
+const menu = ["Главная", "График туров", "Добавить тур", "Вход", "Регистрация"];
 
 const useStyles = makeStyles(() => ({
   link: {
@@ -31,6 +31,9 @@ export default function NavBar() {
         </Link>
         <Link to="/login" className={classes.link}>
           <Button color="inherit">{menu[3]}</Button>
+        </Link>
+        <Link to="/signup" className={classes.link}>
+          <Button color="inherit">{menu[4]}</Button>
         </Link>
       </Toolbar>
     </AppBar>

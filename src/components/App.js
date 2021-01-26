@@ -6,10 +6,10 @@ import HomePage from "./homepage";
 import Footer from "./footer";
 import AddTour from "./add-tour-main";
 import Login from "./login";
-import TourDescription from "./tour-description"
+import TourDescription from "./tour-description";
 import Schedule from "./schedule";
 import EditTourForm from "./edit-tour-form";
-
+import SignUp from "./signup";
 
 export default function App() {
   return (
@@ -22,22 +22,23 @@ export default function App() {
             <HomePage />{" "}
           </Route>
           <Route path="/tours" exact>
-            <Schedule/>
+            <Schedule />
           </Route>
           <Route path="/tours/new">
             <AddTour />
           </Route>
           <Route path="/tours/:id" exact>
-           <TourDescription/>
+            <TourDescription />
           </Route>
           <Route path="/tours/:id/edit">
             <EditTourForm />
           </Route>
           <Route path="/login">
             <Login />
-            <EditTourForm/>
           </Route>
-
+          <Route path="/signup">
+            <SignUp />
+          </Route>
         </Switch>
       </main>
       <Footer />

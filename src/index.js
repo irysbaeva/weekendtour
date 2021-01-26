@@ -19,7 +19,7 @@ ReactDOM.render(
         </TourServiceProvider>
       </ErrorBoundry>
     </Provider>
-  // </React.StrictMode>
+  /* </React.StrictMode> */
   ,
   document.getElementById("root")
 );

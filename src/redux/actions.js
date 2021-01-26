@@ -12,7 +12,6 @@ export const includesAdded = (e) => ({ type: "ADD_INCLUDES", payload: e });
 export const companyAdded = (e) => ({ type: "ADD_COMPANY", payload: e });
 export const imageAdded = (e) => ({ type: "ADD_IMAGE", payload: e });
 
-export const titleEdited = (e) => ({ type: "EDIT_TITLE", payload: e });
 const toursLoaded = (newTours) => {
   return { type: "FETCH_TOURS_SUCCESS", payload: newTours };
 };
@@ -28,20 +27,15 @@ const dateFormat = (date) => {
   moment.locale("ru");
   return moment(date, "YYYY-MM-DD").format("DD.MM.YYYY");
 };
-export const fetchTours = (tourService, dispatch) => () => {
-  const transformTour = (tour) => {
-    return {
-      id: tour._id,
-      title: tour.title,
-      startDate: dateFormat(tour.startDate),
-      endDate: dateFormat(tour.endDate),
-      description: tour.description,
-      price: tour.price,
-      includes: tour.includes,
-      company: tour.company,
-      image: tour.image,
-    };
+const transformTour = (tour) => {
+  return {
+    ...tour,
+    id: tour._id,
+    startDate: dateFormat(tour.startDate),
+    endDate: dateFormat(tour.endDate),
   };
+};
+export const fetchTours = (tourService, dispatch) => () => {
   dispatch(toursRequested());
   tourService
     .getTours()
@@ -59,13 +53,7 @@ export const fetchTour = (tourService, dispatch) => (id) => {
   tourService
     .getTour(id)
     .then(({ data }) => {
-      dispatch(
-        tourLoaded({
-          ...data,
-          startDate: dateFormat(data.startDate),
-          endDate: dateFormat(data.endDate),
-        })
-      );
+      dispatch(tourLoaded(transformTour(data)));
     })
     .catch((err) => dispatch(toursError(err)));
 };
@@ -74,7 +62,6 @@ export const fetchNewTour = (tourService, dispatch) => (data) => {
   tourService
     .addTour(data)
     .then(dispatch(toursRequested()))
-    .then((data) => console.log(data))
     .catch((err) => console.log(err));
 };
 
@@ -84,4 +71,18 @@ export const fetchEditTour = (tourService, dispatch) => (id, data) => {
   // .then(data=>console.log(data)
   // )
   // .catch((err) => console.log(err));
+};
+
+export const fetchNewUser = (tourService, dispatch) => (data) => {
+  tourService
+    .addUser(data)
+    .then(({ data }) => console.log(`getting - ${data}`))
+    .catch((err) => console.log(err));
+};
+
+export const fetchLogin = (tourService, dispatch) => (data) => {
+  tourService
+    .login(data)
+    .then(({ data }) => console.log(`getting - ${data}`))
+    .catch((err) => console.log(err));
 };

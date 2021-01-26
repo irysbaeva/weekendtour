@@ -23,7 +23,11 @@ const AddTourForm = ({
   priceAdded,
   includesAdded,
   companyAdded,
+  newTour,
 }) => {
+
+
+  
   return (
     <React.Fragment>
       <Typography variant="h6" gutterBottom>
@@ -37,7 +41,9 @@ const AddTourForm = ({
             name="title"
             label="Маршрут"
             fullWidth
-            onChange={(e) => titleAdded(e.target.value)}
+            onChange={(e) => {
+              titleAdded(e.target.value);
+            }}
           />
         </Grid>
         <Grid item xs={12} sm={6}>
@@ -122,8 +128,8 @@ const AddTourForm = ({
   );
 };
 
-const mapStateToProps = (state) => {
-  return state;
+const mapStateToProps = ({ newTour }) => {
+  return newTour;
 };
 
 const mapDispatchToProps = {

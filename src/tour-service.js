@@ -11,11 +11,13 @@ const tourService = {
     for (let key in data) {
       fd.append(key, data[key]);
     }
-    axios.post("tours", fd, config);
+    return axios.post("tours", fd, config);
   },
   getTour: (id) => axios.get(`tours/${id}`),
-  editTour: (id,data) => axios.put(`tours/${id}/edit`,data),
+  editTour: (id, data) => axios.put(`tours/${id}/edit`, data),
   deleteTour: (id) => axios.delete(`tours/${id}`, { data: { _id: id } }),
+  addUser: (data) => axios.post("/signup", data),
+  login: (data) => axios.post("/login", data),
 };
 
 export default tourService;

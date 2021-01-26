@@ -2,13 +2,15 @@ let initialState = {
   tours: [],
   loading: true,
   error: null,
+  isLoggedin: false,
+  userName: null,
   newTour: {
     id: null,
     title: null,
     startDate: null,
     endDate: null,
     description: null,
-    price: null,
+    price: 0,
     includes: null,
     company: null,
      image: null
@@ -23,8 +25,14 @@ let initialState = {
     includes: null,
     company: null,
     image:null
+  }, 
+  users: [],
+  newUser: {
+    company: null,
+    email: null,
+    password: null
   }
- 
+
 };
 
 const reducer = (state = initialState, action) => {
