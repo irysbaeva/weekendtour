@@ -39,7 +39,7 @@ const useStyles = makeStyles((theme) => ({
 const Cards = (store) => {
   const classes = useStyles();
   const history = useHistory();
-  const { tours, fetchTours, loading, error } = store;
+  const { tours, fetchTours, loading, error, isLoggedin } = store;
   useEffect(() => {
     fetchTours();
   }, [fetchTours]);
@@ -56,11 +56,8 @@ const Cards = (store) => {
   };
   const deleteTour = async (id) => {
     await tourService.deleteTour(id);
-    fetchTours();
+    await fetchTours();
   };
-
-
-  
 
   return (
     <Container className={classes.cardGrid} maxWidth="md">
@@ -93,16 +90,25 @@ const Cards = (store) => {
                 >
                   Подробнее
                 </Button>
-
-                <Button
-                  onClick={() => {
-                    deleteTour(id);
-                  }}
-                  size="small"
-                  color="primary"
-                >
-                  Удалить
-                </Button>
+                {isLoggedin ? (
+                  <Button
+                    onClick={() => {
+                      deleteTour(id);
+                    }}
+                    size="small"
+                    color="primary"
+                  >
+                    Удалить
+                  </Button>
+                ) : (
+                  <Button
+                    onClick={() => {
+                      deleteTour(id);
+                    }}
+                  >
+                    типа нельзя удалить
+                  </Button>
+                )}
               </CardActions>
             </Card>
           </Grid>
@@ -125,6 +131,7 @@ function mapStateToProps(store) {
     tours: store.tours,
     loading: store.loading,
     error: store.error,
+    isLoggedin: store.isLoggedin,
   };
 }
 
