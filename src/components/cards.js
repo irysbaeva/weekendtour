@@ -36,9 +36,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Cards = ({ tours, fetchTours, loading, error }) => {
+const Cards = (store) => {
   const classes = useStyles();
   const history = useHistory();
+  const { tours, fetchTours, loading, error } = store;
   useEffect(() => {
     fetchTours();
   }, [fetchTours]);
@@ -59,6 +60,8 @@ const Cards = ({ tours, fetchTours, loading, error }) => {
   };
 
 
+  
+
   return (
     <Container className={classes.cardGrid} maxWidth="md">
       <Grid container spacing={4}>
@@ -67,7 +70,7 @@ const Cards = ({ tours, fetchTours, loading, error }) => {
             <Card className={classes.card}>
               <CardMedia
                 className={classes.cardMedia}
-                image={`http://localhost:3333/${image}`}
+                image={`http://localhost:5000/${image}`}
                 title="Image title"
               />
 
@@ -90,7 +93,7 @@ const Cards = ({ tours, fetchTours, loading, error }) => {
                 >
                   Подробнее
                 </Button>
-             
+
                 <Button
                   onClick={() => {
                     deleteTour(id);
@@ -109,13 +112,21 @@ const Cards = ({ tours, fetchTours, loading, error }) => {
   );
 };
 
-const mapStateToProps = ({ tours, loading, error }) => {
+// const mapStateToProps = ({ tours, loading, error }) => {
+//   return {
+//     tours,
+//     loading,
+//     error,
+//   };
+// };
+
+function mapStateToProps(store) {
   return {
-    tours,
-    loading,
-    error,
+    tours: store.tours,
+    loading: store.loading,
+    error: store.error,
   };
-};
+}
 
 const mapDispatchToProps = (dispatch, ownProps) => {
   const { tourService } = ownProps;

@@ -3,7 +3,6 @@ let initialState = {
   loading: true,
   error: null,
   isLoggedin: false,
-  userName: null,
   newTour: {
     id: null,
     title: null,
@@ -114,6 +113,22 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         newTour: { ...state.newTour, image: action.payload },
+      };
+
+    case "ADD_USER_SUCCESS":
+      return {
+        ...state,
+        isLoggedin:true,
+      };
+    case "LOGIN_USER_SUCCESS":
+      return {
+        ...state,
+        isLoggedin: true,
+      };
+    case "LOGOUT_USER_SUCCESS":
+      return {
+        ...state,
+        isLoggedin: false,
       };
 
     default:

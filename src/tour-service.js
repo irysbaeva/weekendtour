@@ -1,12 +1,18 @@
 import axios from "axios";
-axios.defaults.baseURL = "http://localhost:3333/";
+axios.defaults.baseURL = "http://localhost:5000/";
+const token = localStorage.getItem("token");
+const authAxios = axios.create({
+  headers: { Authorization: `Bearer ${token}` },
+});
 
 const tourService = {
   getTours: () => axios.get("tours"),
   addTour: (data) => {
     let fd = new FormData();
     let config = {
-      header: { "content-type": "multipart/form-data" },
+      headers: {
+        "content-type": "multipart/form-data",
+      },
     };
     for (let key in data) {
       fd.append(key, data[key]);
@@ -15,7 +21,11 @@ const tourService = {
   },
   getTour: (id) => axios.get(`tours/${id}`),
   editTour: (id, data) => axios.put(`tours/${id}/edit`, data),
-  deleteTour: (id) => axios.delete(`tours/${id}`, { data: { _id: id } }),
+
+  deleteTour: (id) => {
+    console.log(localStorage.getItem("token"));
+    return authAxios.delete(`tours/${id}`, { data: { _id: id } });
+  },
   addUser: (data) => axios.post("/signup", data),
   login: (data) => axios.post("/login", data),
 };

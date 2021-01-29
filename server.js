@@ -38,18 +38,26 @@ app.get("/tours", (req, res) => {
       res.send(err);
     }
     res.json(tours);
-  });
+  })
+    .catch((err) => {
+      console.log(err);
+      res.status(500).json({ error: err });
+    });
+  ;
 });
 
 app.get("/tours/:id", (req, res) => {
   const { id } = req.params;
-  console.log(id);
+ 
 
   stringify(Tour.findById(id).then((data) => res.send(data)));
 });
 
-app.delete("/tours/:id", checkAuth, (req, res) => {
+app.delete("/tours/:id", checkAuth,(req, res) => {
   const { id } = req.params;
+
+
+  
   Tour.deleteOne({ _id: id }).then((tour) => {
     if (tour) {
       res.json({ status: "deleted" });
@@ -63,8 +71,8 @@ app.get("/tours/:id/edit", checkAuth, (req, res) => {
   stringify(Tour.findById(id).then((data) => res.send(data)));
 });
 
-app.put("/tours/:id/edit", (req, res) => {
-  console.log(req.params.id);
+app.put("/tours/:id/edit",checkAuth, (req, res) => {
+
 
   Tour.findByIdAndUpdate(req.params.id, { $set: req.body }, (err) => {
     if (err) {
@@ -75,8 +83,7 @@ app.put("/tours/:id/edit", (req, res) => {
 });
 
 app.post("/tours", checkAuth, upload.single("image"), (req, res) => {
-  console.log(req.file);
-  console.log(req.body.startDate);
+
   const path = req.file ? req.file.path : null;
 
   const data = req.body;
@@ -100,7 +107,7 @@ app.post("/tours", checkAuth, upload.single("image"), (req, res) => {
 });
 
 app.post("/signup", (req, res) => {
-  console.log(req.body.email);
+
   User.find({ email: req.body.email })
     .exec()
     .then((user) => {
@@ -136,7 +143,7 @@ app.post("/signup", (req, res) => {
 });
 
 app.post("/login", (req, res) => {
-  console.log(req.body.email);
+
   
   User.find({ email: req.body.email })
     .exec()
@@ -169,6 +176,6 @@ app.post("/login", (req, res) => {
     });
 });
 
-app.listen(3333, () => {
+app.listen(5000, () => {
   console.log("server is running");
 });

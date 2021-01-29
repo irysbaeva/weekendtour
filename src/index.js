@@ -8,6 +8,7 @@ import App from "./components/App";
 import ErrorBoundry from "./components/error-boundry";
 import store from "./store";
 
+
 ReactDOM.render(
   // <React.StrictMode>
     <Provider store={store}>

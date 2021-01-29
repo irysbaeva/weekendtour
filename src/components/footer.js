@@ -2,6 +2,7 @@ import React from "react";
 import Typography from "@material-ui/core/Typography";
 import Link from "@material-ui/core/Link";
 import { makeStyles } from "@material-ui/core/styles";
+import { Button } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
   footer: {
@@ -37,6 +38,17 @@ export default function Footer() {
           color="textSecondary"
           component="p"
         >
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={() => {
+              localStorage.clear();
+
+              console.log(localStorage.getItem("token"));
+            }}
+          >
+            clear localStorage
+          </Button>
           Something here to give the footer a purpose!
         </Typography>
         <Copyright />

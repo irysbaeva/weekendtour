@@ -23,11 +23,13 @@ const toursRequested = () => {
 const toursError = (error) => {
   return { type: "FETCH_TOURS_FAILURE", payload: error };
 };
-const dateFormat = (date) => {
-  moment.locale("ru");
-  return moment(date, "YYYY-MM-DD").format("DD.MM.YYYY");
-};
+
 const transformTour = (tour) => {
+  const dateFormat = (date) => {
+    moment.locale("ru");
+    return moment(date, "YYYY-MM-DD").format("DD.MM.YYYY");
+  };
+
   return {
     ...tour,
     id: tour._id,
@@ -73,16 +75,35 @@ export const fetchEditTour = (tourService, dispatch) => (id, data) => {
   // .catch((err) => console.log(err));
 };
 
+const addUser = () => {
+  return { type: "ADD_USER_SUCCESS" };
+};
+export const loginUser = () => {
+  return { type: "LOGIN_USER_SUCCESS" };
+};
+
+export const logoutUser = () => {
+  return { type: "LOGOUT_USER_SUCCESS" };
+};
 export const fetchNewUser = (tourService, dispatch) => (data) => {
   tourService
     .addUser(data)
-    .then(({ data }) => console.log(`getting - ${data}`))
+    .then(({ data }) => {
+      dispatch(addUser);
+      localStorage.setItem("token", data.token);
+    })
     .catch((err) => console.log(err));
 };
 
 export const fetchLogin = (tourService, dispatch) => (data) => {
-  tourService
+  return tourService
     .login(data)
-    .then(({ data }) => console.log(`getting - ${data}`))
+    .then(({ data }) => {
+      if (data.message === "Auth succesful") {
+        dispatch(loginUser());
+        localStorage.setItem("token", data.token);
+      }
+    })
     .catch((err) => console.log(err));
 };
+
