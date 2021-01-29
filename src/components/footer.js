@@ -3,6 +3,8 @@ import Typography from "@material-ui/core/Typography";
 import Link from "@material-ui/core/Link";
 import { makeStyles } from "@material-ui/core/styles";
 import { Button } from "@material-ui/core";
+import { logoutUser } from "../redux/actions";
+import { connect } from "react-redux";
 
 const useStyles = makeStyles((theme) => ({
   footer: {
@@ -24,8 +26,10 @@ function Copyright() {
   );
 }
 
-export default function Footer() {
+const Footer = ({ logoutUser, isLoggedin }) => {
   const classes = useStyles();
+  console.log(`status login ${isLoggedin}`);
+
   return (
     <div>
       <footer className={classes.footer}>
@@ -38,16 +42,20 @@ export default function Footer() {
           color="textSecondary"
           component="p"
         >
+          {/* <Button variant="contained" color="primary" onClick={logoutUser}>
+            logout 
+          </Button> */}
           <Button
             variant="contained"
             color="primary"
             onClick={() => {
+              logoutUser();
               localStorage.clear();
 
-              console.log(localStorage.getItem("token"));
+              console.log(`token...${localStorage.getItem("token")}`);
             }}
           >
-            clear localStorage
+            logout and clear localStorage
           </Button>
           Something here to give the footer a purpose!
         </Typography>
@@ -55,4 +63,18 @@ export default function Footer() {
       </footer>
     </div>
   );
+};
+
+const mapStateToProps = (store) => {
+  return { isLoggedin: store.isLoggedin };
+};
+
+function mapDispatchToProps(dispatch) {
+  return {
+    logoutUser: () => {
+      dispatch(logoutUser());
+    },
+  };
 }
+
+export default connect(mapStateToProps, mapDispatchToProps)(Footer);

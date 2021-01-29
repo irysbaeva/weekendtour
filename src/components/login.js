@@ -10,7 +10,7 @@ import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
-import { fetchLogin, loginUser, logoutUser } from "../redux/actions";
+import { fetchLogin, loginUser } from "../redux/actions";
 import { connect } from "react-redux";
 import compose from "../compose";
 import withTourService from "../with-tour-service";
@@ -39,7 +39,7 @@ const Login = (store) => {
   const classes = useStyles();
   const history = useHistory();
   const [user, setUser] = useState({});
-  const { isLoggedin, loginUser, logoutUser, fetchLogin } = store;
+  const { isLoggedin, loginUser, fetchLogin } = store;
 
   const onEmailAdded = (email) => {
     setUser({ ...user, email: email });
@@ -47,12 +47,15 @@ const Login = (store) => {
   const onPasswordAdded = (password) => {
     setUser({ ...user, password: password });
   };
+  console.log(`status login ${isLoggedin}`);
 
   const redirect = () => {
     history.push(`/`);
   };
   return (
     <div>
+      {isLoggedin && redirect()}
+
       <Container component="main" maxWidth="xs">
         <CssBaseline />
         <div className={classes.paper}>
@@ -121,24 +124,8 @@ const Login = (store) => {
 
                 if (res.token) {
                   localStorage.setItem("token", res.token);
-                  // console.log(res.token);
-                  loginUser(); // должен менять статус isLoggedin с false на  true
-                  // в редаксе видно что стэйт изменился сразу на true,  но в консоле
-                  // по прежнему  false, только при повторном нажатии на кнопку
-                  // меняется на true
-
-                  const timer = () => {
-                    setTimeout(() => {
-                      console.log(isLoggedin);
-                    }, 1000);
-                  };
-                  timer();
-
-                  if (isLoggedin) {
-                    // redirect();
-                    // не перенаправляет на нужную страницу
-                    //так как статус isLoggedin = false
-                  }
+                  console.log(`getting token ${res.token}`);
+                  loginUser();
                 }
               }}
             >
@@ -153,9 +140,6 @@ const Login = (store) => {
             </Grid>
           </form>
         </div>
-        <Button variant="contained" color="primary" onClick={logoutUser}>
-          logout ( пока только меняет статут isLoggedin на false)
-        </Button>
       </Container>
     </div>
   );
@@ -176,9 +160,6 @@ function mapDispatchToProps(dispatch) {
   return {
     loginUser: () => {
       dispatch(loginUser());
-    },
-    logoutUser: () => {
-      dispatch(logoutUser());
     },
   };
 }

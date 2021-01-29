@@ -23,7 +23,7 @@ const tourService = {
   editTour: (id, data) => axios.put(`tours/${id}/edit`, data),
 
   deleteTour: (id) => {
-    console.log(localStorage.getItem("token"));
+    console.log(`token for deleting ${localStorage.getItem("token")}`);
     return authAxios.delete(`tours/${id}`, { data: { _id: id } });
   },
   addUser: (data) => axios.post("/signup", data),

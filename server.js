@@ -82,7 +82,7 @@ app.put("/tours/:id/edit",checkAuth, (req, res) => {
   });
 });
 
-app.post("/tours", checkAuth, upload.single("image"), (req, res) => {
+app.post("/tours",  upload.single("image"), (req, res) => {
 
   const path = req.file ? req.file.path : null;
 
