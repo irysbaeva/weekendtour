@@ -148,7 +148,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     fetchTours: fetchTours(tourService, dispatch),
     tourAdded: (id) => dispatch(tourAdded(id)),
-    // tourAdded: (id) => dispatch(tourAdded(id))
+  
   };
 };
 

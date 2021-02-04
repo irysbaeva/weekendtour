@@ -32,8 +32,7 @@ const tourService = {
     console.log(token);
 
     // console.log(`token for deleting ${localStorage.getItem("token")}`);
-    // выводит токен,
-    //  но в хэдэре уходит Bearer null, только после перезагрузки страницы уходит с токеном.
+
     // authAxios.delete(`tours/${id}`, { data: { _id: id } });
     axios.delete(`tours/${id}`, config, { data: { _id: id } });
   },

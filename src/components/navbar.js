@@ -46,7 +46,7 @@ const NavBar = ({ isLoggedin, logoutUser }) => {
             <Link
               to="/"
               onClick={() => {
-                logoutUser(); // меняет isLoggedin на false
+                logoutUser(); 
                 localStorage.clear();
 
                 console.log(`token...${localStorage.getItem("token")}`);

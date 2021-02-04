@@ -19,12 +19,7 @@ const columns = [
     type: "number",
     width: 120,
   },
-  // {
-  //   field: "description",
-  //   headerName: "Краткое описание",
-  //   sortable: false,
-  //   width: 600,
-  // },
+
   {
     field: "seats",
     headerName: "Осталось мест",
