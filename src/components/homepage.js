@@ -6,7 +6,6 @@ import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import img from "../pic.webp";
 import Cards from "./cards";
-import AddTour from "./add-tour-main";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 
@@ -74,7 +73,6 @@ const HomePage = ({ newTour }) => {
         </Container>
       </div>
       <Cards />
-      <AddTour />
     </div>
   );
 };

@@ -14,6 +14,8 @@ const menu = [
   "Вход",
   "Регистрация",
   "Выйти",
+  "Забронировать тур",
+  "Заявки",
 ];
 
 const useStyles = makeStyles(() => ({
@@ -32,37 +34,45 @@ const NavBar = ({ isLoggedin, logoutUser }) => {
         <Link to="/" className={classes.link}>
           <Button color="inherit">{menu[0]}</Button>
         </Link>
-        <Link to="/tours" className={classes.link}>
-          <Button color="inherit">{menu[1]}</Button>
-        </Link>
 
         {isLoggedin ? (
-          <Link to="/tours/new" className={classes.link}>
-            <Button color="inherit">{menu[2]}</Button>
-          </Link>
-        ) : (
-          <Link to="/signup" className={classes.link}>
-            <Button color="inherit">{menu[4]}</Button>
-          </Link>
-        )}
-        {isLoggedin ? (
-          <Link
-            to="/"
-            onClick={() => {
-              logoutUser(); // меняет isLoggedin на false
-              localStorage.clear();
+          <div>
+            <Link to="/bookings" className={classes.link}>
+              <Button color="inherit">{menu[7]}</Button>
+            </Link>
+            <Link to="/tours/new" className={classes.link}>
+              <Button color="inherit">{menu[2]}</Button>
+            </Link>
+            <Link
+              to="/"
+              onClick={() => {
+                logoutUser(); // меняет isLoggedin на false
+                localStorage.clear();
 
-              console.log(`token...${localStorage.getItem("token")}`);
-            }}
-          >
-            <Button className={classes.link} color="inherit">
-              {menu[5]}
-            </Button>
-          </Link>
+                console.log(`token...${localStorage.getItem("token")}`);
+              }}
+            >
+              <Button className={classes.link} color="inherit">
+                {menu[5]}
+              </Button>
+            </Link>
+          </div>
         ) : (
-          <Link to="/login" className={classes.link}>
-            <Button color="inherit">{menu[3]}</Button>
-          </Link>
+          <div>
+            <Link to="/tours" className={classes.link}>
+              <Button color="inherit">{menu[1]}</Button>
+            </Link>
+            <Link to="/bookings/new" className={classes.link}>
+              <Button color="inherit">{menu[6]}</Button>
+            </Link>
+            {/* <Link to="/signup" className={classes.link}>
+              <Button color="inherit">{menu[4]}</Button>
+            </Link> */}
+            <Link to="/login" className={classes.link}>
+              <Button color="inherit">{menu[3]}</Button>
+            </Link>
+         
+          </div>
         )}
       </Toolbar>
     </AppBar>

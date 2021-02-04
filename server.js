@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const Tour = require("./tourModel");
 const User = require("./userModel");
+const Booking = require("./bookingModel");
 const stringify = require("json-stringify-safe");
 const cors = require("cors");
 const multer = require("multer");
@@ -33,31 +34,27 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 app.get("/tours", (req, res) => {
-  Tour.find().then((err, tours) => {
-    if (err) {
-      res.send(err);
-    }
-    res.json(tours);
-  })
+  Tour.find()
+    .populate("company")
+    .then((tours) => res.status(200).json(tours))
     .catch((err) => {
-      console.log(err);
       res.status(500).json({ error: err });
     });
-  ;
 });
 
 app.get("/tours/:id", (req, res) => {
   const { id } = req.params;
- 
 
-  stringify(Tour.findById(id).then((data) => res.send(data)));
+  stringify(
+    Tour.findById(id)
+      .populate("company")
+      .then((data) => res.send(data))
+  );
 });
 
-app.delete("/tours/:id", checkAuth,(req, res) => {
+app.delete("/tours/:id", checkAuth, (req, res) => {
   const { id } = req.params;
 
-
-  
   Tour.deleteOne({ _id: id }).then((tour) => {
     if (tour) {
       res.json({ status: "deleted" });
@@ -71,9 +68,7 @@ app.get("/tours/:id/edit", checkAuth, (req, res) => {
   stringify(Tour.findById(id).then((data) => res.send(data)));
 });
 
-app.put("/tours/:id/edit",checkAuth, (req, res) => {
-
-
+app.put("/tours/:id/edit", (req, res) => {
   Tour.findByIdAndUpdate(req.params.id, { $set: req.body }, (err) => {
     if (err) {
       res.send(err);
@@ -82,8 +77,7 @@ app.put("/tours/:id/edit",checkAuth, (req, res) => {
   });
 });
 
-app.post("/tours",  upload.single("image"), (req, res) => {
-
+app.post("/tours", upload.single("image"), (req, res) => {
   const path = req.file ? req.file.path : null;
 
   const data = req.body;
@@ -97,6 +91,7 @@ app.post("/tours",  upload.single("image"), (req, res) => {
     price: data.price,
     company: data.company,
     image: path,
+    seats: data.seats,
   });
   tour
     .save()
@@ -106,8 +101,36 @@ app.post("/tours",  upload.single("image"), (req, res) => {
     });
 });
 
-app.post("/signup", (req, res) => {
+app.get("/bookings", (req, res) => {
+  Booking.find()
+    .populate("tour")
+    .then((bookings) => res.status(200).json(bookings))
+    .catch((err) => {
+      res.status(500).json({ error: err });
+    });
+});
+app.post("/bookings", (req, res) => {
+  const data = req.body;
+  console.log(data);
+  const booking = new Booking({
+    _id: new mongoose.Types.ObjectId(),
+    firstName: data.firstName,
+    lastName: data.lastName,
+    email: data.email,
+    phone: data.phone,
+    seats: data.seats,
+    tour: data.tour,
+    // company: data.company,
+  });
+  booking
+    .save()
+    .then(() => res.status(201).json({ message: " Booking created" }))
+    .catch((err) => {
+      res.status(500).json({ error: err });
+    });
+});
 
+app.post("/signup", (req, res) => {
   User.find({ email: req.body.email })
     .exec()
     .then((user) => {
@@ -122,7 +145,7 @@ app.post("/signup", (req, res) => {
           } else {
             const user = new User({
               _id: new mongoose.Types.ObjectId(),
-              company: req.body.company,
+              companyName: req.body.companyName,
               email: req.body.email,
               password: hash,
             });
@@ -143,8 +166,6 @@ app.post("/signup", (req, res) => {
 });
 
 app.post("/login", (req, res) => {
-
-  
   User.find({ email: req.body.email })
     .exec()
     .then((user) => {

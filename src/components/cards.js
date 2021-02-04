@@ -9,7 +9,7 @@ import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
-import { fetchTours } from "../redux/actions";
+import { fetchTours, tourAdded } from "../redux/actions";
 import { useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import compose from "../compose";
@@ -39,7 +39,15 @@ const useStyles = makeStyles((theme) => ({
 const Cards = (store) => {
   const classes = useStyles();
   const history = useHistory();
-  const { tours, fetchTours, loading, error, isLoggedin } = store;
+  const {
+    tours,
+    fetchTours,
+    loading,
+    error,
+    isLoggedin,
+
+    tourAdded,
+  } = store;
   useEffect(() => {
     fetchTours();
   }, [fetchTours]);
@@ -51,8 +59,13 @@ const Cards = (store) => {
     return <ErrorIndicator />;
   }
 
-  const redirect = (id) => {
+  const getInfo = (id) => {
     history.push(`tours/${id}`);
+  };
+  const bookTour = (id) => {
+    tourAdded(id);
+
+    history.push(`bookings/new`);
   };
   const deleteTour = async (id) => {
     await tourService.deleteTour(id);
@@ -85,11 +98,12 @@ const Cards = (store) => {
                   size="small"
                   color="primary"
                   onClick={() => {
-                    redirect(id);
+                    getInfo(id);
                   }}
                 >
                   Подробнее
                 </Button>
+
                 {isLoggedin ? (
                   <Button
                     onClick={() => {
@@ -102,11 +116,13 @@ const Cards = (store) => {
                   </Button>
                 ) : (
                   <Button
+                    size="small"
+                    color="primary"
                     onClick={() => {
-                      deleteTour(id);
+                      bookTour(id);
                     }}
                   >
-                    типа нельзя удалить
+                    Забронировать
                   </Button>
                 )}
               </CardActions>
@@ -117,14 +133,6 @@ const Cards = (store) => {
     </Container>
   );
 };
-
-// const mapStateToProps = ({ tours, loading, error }) => {
-//   return {
-//     tours,
-//     loading,
-//     error,
-//   };
-// };
 
 function mapStateToProps(store) {
   return {
@@ -139,6 +147,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   const { tourService } = ownProps;
   return {
     fetchTours: fetchTours(tourService, dispatch),
+    tourAdded: (id) => dispatch(tourAdded(id)),
+    // tourAdded: (id) => dispatch(tourAdded(id))
   };
 };
 

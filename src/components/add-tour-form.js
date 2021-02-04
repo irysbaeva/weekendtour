@@ -13,6 +13,7 @@ import {
   includesAdded,
   priceAdded,
   companyAdded,
+  seatsAdded
 } from "../redux/actions";
 
 const AddTourForm = ({
@@ -23,6 +24,7 @@ const AddTourForm = ({
   priceAdded,
   includesAdded,
   companyAdded,
+  seatsAdded,
   newTour,
 }) => {
 
@@ -118,6 +120,16 @@ const AddTourForm = ({
             onChange={(e) => companyAdded(e.target.value)}
           />
         </Grid>
+        <Grid item xs={12} sm={6}>
+          <TextField
+            required
+            id="seats"
+            name="seats"
+            label="Количество мест"
+            fullWidth
+            onChange={(e) => seatsAdded(e.target.value)}
+          />
+        </Grid>
         <Grid item xs={12}>
           <div>
             <UploadImage />
@@ -142,5 +154,6 @@ const mapDispatchToProps = {
   priceAdded,
   includesAdded,
   companyAdded,
+  seatsAdded
 };
 export default connect(mapStateToProps, mapDispatchToProps)(AddTourForm);

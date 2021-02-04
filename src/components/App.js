@@ -10,6 +10,8 @@ import TourDescription from "./tour-description";
 import Schedule from "./schedule";
 import EditTourForm from "./edit-tour-form";
 import SignUp from "./signup";
+import BookTourForm from "./book-tour-form";
+import Bookings from "./bookings";
 
 export default function App() {
   return (
@@ -19,7 +21,7 @@ export default function App() {
       <main>
         <Switch>
           <Route path="/" exact>
-            <HomePage />{" "}
+            <HomePage />
           </Route>
           <Route path="/tours" exact>
             <Schedule />
@@ -38,6 +40,12 @@ export default function App() {
           </Route>
           <Route path="/signup">
             <SignUp />
+          </Route>
+          <Route path="/bookings/new">
+            <BookTourForm />
+          </Route>
+          <Route path="/bookings">
+            <Bookings />
           </Route>
         </Switch>
       </main>

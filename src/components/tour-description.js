@@ -69,7 +69,7 @@ console.log(fullDescription );
     description,
     includes,
     price,
-    company,
+    company, seats
   } = fullDescription;
   const tour = [
     {
@@ -99,6 +99,10 @@ console.log(fullDescription );
     {
       primary: "Организатор",
       secondary: company,
+    },
+    {
+      primary: "Осталось мест",
+      secondary: seats,
     },
   ];
 

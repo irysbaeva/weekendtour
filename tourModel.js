@@ -8,7 +8,8 @@ const Tour = mongoose.model("Tour", {
   description: { type: String, required: true },
   includes: { type: String, required: true },
   price: { type: Number, required: true },
-  company: String,
+  company: { type: mongoose.Schema.Types.ObjectId,ref: "User"},
   image: { type: String, required: true },
+  seats: { type: Number, required: true },
 });
 module.exports = Tour;

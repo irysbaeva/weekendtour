@@ -11,7 +11,7 @@ import store from "./store";
 
 ReactDOM.render(
   // <React.StrictMode>
-    <Provider store={store}>
+  <Provider store={store}>
       <ErrorBoundry>
         <TourServiceProvider value={tourService}>
           <Router>

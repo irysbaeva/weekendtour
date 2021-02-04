@@ -28,6 +28,7 @@ function AddTourReview({ newTour }) {
     price,
     includes,
     company,
+    seats
   } = newTour;
 
  
@@ -60,7 +61,11 @@ function AddTourReview({ newTour }) {
       primary: "Организатор",
       secondary: company,
     },
-  ];
+    {
+      primary: "Количество мест",
+      secondary: seats,
+    },
+  ]; 
   return (
     <React.Fragment>
       <Typography variant="h6" gutterBottom>

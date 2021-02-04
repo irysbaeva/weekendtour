@@ -64,6 +64,7 @@ const EditTourForm = ({
 
   const [titleValue, setTitleValue] = useState(fullDescription.title);
   const [priceValue, setPriceValue] = useState(fullDescription.price);
+  const [seatsValue, setSeatsValue] = useState(fullDescription.seats);
   const [descriptionValue, setDescriptionValue] = useState(
     fullDescription.description
   );
@@ -81,6 +82,11 @@ const EditTourForm = ({
   const descriptionEdited = (e) => {
     setDescriptionValue(e);
     setEditedTour({ ...editedTour, description: e });
+  };
+
+  const seatsEdited = (e) => {
+    setSeatsValue(e);
+    setEditedTour({ ...editedTour, seats: e });
   };
 
   const redirect = (id) => {
@@ -139,6 +145,20 @@ const EditTourForm = ({
                   shrink: true,
                 }}
                 value={priceValue || ""}
+                fullWidth
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                required
+                id="seats"
+                name="seats"
+                label="Осталось мест"
+                onChange={(e) => seatsEdited(e.target.value)}
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                value={seatsValue || ""}
                 fullWidth
               />
             </Grid>

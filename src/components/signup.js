@@ -41,7 +41,7 @@ const SignUp = ({ fetchNewUser }) => {
   const [newUser, setNewUser] = useState({});
 
   const onCompanyAdded = (companyName) => {
-    setNewUser({ ...newUser, company: companyName });
+    setNewUser({ ...newUser, companyName: companyName });
   };
   const onEmailAdded = (email) => {
     setNewUser({ ...newUser, email: email });

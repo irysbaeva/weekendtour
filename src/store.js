@@ -13,6 +13,8 @@ const store = createStore(reducer, persistedState, middleware);
 
 store.subscribe(() => {
   saveState(store.getState());
+  console.log(store.getState());
+  
 });
 
 export default store;

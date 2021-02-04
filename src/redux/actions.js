@@ -11,9 +11,10 @@ export const priceAdded = (e) => ({ type: "ADD_PRICE", payload: e });
 export const includesAdded = (e) => ({ type: "ADD_INCLUDES", payload: e });
 export const companyAdded = (e) => ({ type: "ADD_COMPANY", payload: e });
 export const imageAdded = (e) => ({ type: "ADD_IMAGE", payload: e });
+export const seatsAdded = (e) => ({ type: "ADD_SEATS", payload: e });
 
-const toursLoaded = (newTours) => {
-  return { type: "FETCH_TOURS_SUCCESS", payload: newTours };
+const toursLoaded = (tours) => {
+  return { type: "FETCH_TOURS_SUCCESS", payload: tours };
 };
 
 const toursRequested = () => {
@@ -35,6 +36,7 @@ const transformTour = (tour) => {
     id: tour._id,
     startDate: dateFormat(tour.startDate),
     endDate: dateFormat(tour.endDate),
+    company: tour.company.companyName,
   };
 };
 export const fetchTours = (tourService, dispatch) => () => {
@@ -59,11 +61,12 @@ export const fetchTour = (tourService, dispatch) => (id) => {
     })
     .catch((err) => dispatch(toursError(err)));
 };
+const clearNewTourInfo = () => ({ type: "CLEAR_NEW_TOUR_INFO" });
 
 export const fetchNewTour = (tourService, dispatch) => (data) => {
   tourService
     .addTour(data)
-    .then(dispatch(toursRequested()))
+    .then(dispatch(clearNewTourInfo()))
     .catch((err) => console.log(err));
 };
 
@@ -107,3 +110,39 @@ export const fetchLogin = (tourService, dispatch) => (data) => {
     .catch((err) => console.log(err));
 };
 
+export const firstNameAdded = (e) => ({ type: "ADD_FIRST_NAME", payload: e });
+export const lastNameAdded = (e) => ({ type: "ADD_LAST_NAME", payload: e });
+export const tourAdded = (e) => ({ type: "ADD_TOUR", payload: e });
+export const emailAdded = (e) => ({ type: "ADD_EMAIL", payload: e });
+export const phoneAdded = (e) => ({ type: "ADD_PHONE", payload: e });
+export const bookSeats = (e) => ({ type: "BOOK_SEATS", payload: e });
+
+const clearBookingInfo = () => ({ type: "CLEAR_BOOKING_INFO" });
+const bookingsLoaded = (bookings) => {
+  return { type: "FETCH_BOOKINGS_SUCCESS", payload: bookings };
+};
+
+const transformBooking = (booking) => {
+  return {
+    ...booking,
+    id: booking._id,
+    tour: booking.tour? booking.tour.title : "Тур отменен"
+  };
+};
+export const fetchBookings = (tourService, dispatch) => () => {
+  tourService
+    .getBookings()
+    .then(({ data }) => {
+      dispatch(bookingsLoaded(data.map(transformBooking)));
+    })
+    .catch((err) => dispatch(toursError(err)));
+};
+
+export const fetchNewBooking = (tourService, dispatch) => (data) => {
+  tourService
+    .addBooking(data)
+    .then(() => {
+      dispatch(clearBookingInfo());
+    })
+    .catch((err) => console.log(err));
+};

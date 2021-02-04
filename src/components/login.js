@@ -10,7 +10,7 @@ import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
-import { fetchLogin, loginUser } from "../redux/actions";
+import { fetchLogin } from "../redux/actions";
 import { connect } from "react-redux";
 import compose from "../compose";
 import withTourService from "../with-tour-service";
@@ -39,7 +39,7 @@ const Login = (store) => {
   const classes = useStyles();
   const history = useHistory();
   const [user, setUser] = useState({});
-  const { isLoggedin, loginUser, fetchLogin } = store;
+  const { isLoggedin, fetchLogin } = store;
 
   const onEmailAdded = (email) => {
     setUser({ ...user, email: email });
@@ -100,33 +100,10 @@ const Login = (store) => {
               variant="contained"
               color="primary"
               className={classes.submit}
-              // onClick={(event) => {
-              //   console.log(user);
-              //   event.preventDefault();
-              //   fetchLogin(user);
-              //   if (isLoggedin) {
-              //     redirect();
-              //   }
-              // }}
-              onClick={async (e) => {
-                e.preventDefault();
-                const response = await fetch(`http://localhost:5000/login`, {
-                  method: "POST",
-                  headers: {
-                    "Content-Type": "application/json",
-                  },
-                  body: JSON.stringify({
-                    email: user.email,
-                    password: user.password,
-                  }),
-                });
-                const res = await response.json();
-
-                if (res.token) {
-                  localStorage.setItem("token", res.token);
-                  console.log(`getting token ${res.token}`);
-                  loginUser();
-                }
+              onClick={(event) => {
+                console.log(user);
+                event.preventDefault();
+                fetchLogin(user);
               }}
             >
               login
@@ -134,7 +111,7 @@ const Login = (store) => {
             <Grid container>
               <Grid item>
                 <Link href="/signup" variant="body2">
-                  {"Don't have an account? Sign Up"}
+                  {"Зарегистрироваться"}
                 </Link>
               </Grid>
             </Grid>
@@ -149,20 +126,12 @@ const mapStateToProps = (store) => {
   return { isLoggedin: store.isLoggedin };
 };
 
-// const mapDispatchToProps = (dispatch, ownProps) => {
-//   const { tourService } = ownProps;
-//   return {
-//     fetchLogin: fetchLogin(tourService, dispatch),
-//   };
-// };
-
-function mapDispatchToProps(dispatch) {
+const mapDispatchToProps = (dispatch, ownProps) => {
+  const { tourService } = ownProps;
   return {
-    loginUser: () => {
-      dispatch(loginUser());
-    },
+    fetchLogin: fetchLogin(tourService, dispatch),
   };
-}
+};
 
 export default compose(
   withTourService(),
