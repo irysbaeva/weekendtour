@@ -21,7 +21,7 @@ const Bookings = ({ fetchBookings, bookings, loading, error }) => {
   useEffect(() => {
     fetchBookings();
   }, [fetchBookings]);
-
+ 
   if (loading) {
     return <Spinner />;
   }
