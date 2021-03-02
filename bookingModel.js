@@ -8,6 +8,6 @@ const Booking = mongoose.model("Booking", {
   phone: { type: String, required: true },
   seats: { type: Number, required: true },
   tour: { type: mongoose.Schema.Types.ObjectId, ref: "Tour" },
-  // company: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+  company: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
 });
 module.exports = Booking;

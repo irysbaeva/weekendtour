@@ -1,10 +1,10 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import Button from "@material-ui/core/Button";
 import { fetchTour } from "../redux/actions";
 import { connect } from "react-redux";
 import { useHistory } from "react-router-dom";
-import compose from "../compose";
+import compose from "../utils/compose";
 import withTourService from "../with-tour-service";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
@@ -50,14 +50,17 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const TourDescription = ({ fullDescription, fetchTour }) => {
+const TourDescription = ({ fetchTour, currentUser }) => {
   let { id } = useParams();
   const classes = useStyles();
   const history = useHistory();
+  const [tourInfo, setTourInfo] = useState({});
+
   useEffect(() => {
-    fetchTour(id);
+    fetchTour(id).then((data) => {
+      setTourInfo(data);
+    });
   }, [fetchTour, id]);
-console.log(fullDescription );
 
   const redirectToEditTour = (id) => {
     history.push(`${id}/edit`);
@@ -69,8 +72,10 @@ console.log(fullDescription );
     description,
     includes,
     price,
-    company, seats
-  } = fullDescription;
+    company,
+    seats,
+  } = tourInfo;
+
   const tour = [
     {
       primary: "Маршрут",
@@ -98,7 +103,7 @@ console.log(fullDescription );
     },
     {
       primary: "Организатор",
-      secondary: company,
+      secondary: company ? company.companyName : null,
     },
     {
       primary: "Осталось мест",
@@ -124,26 +129,26 @@ console.log(fullDescription );
               );
             })}
           </List>
-          <Button
-            variant="contained"
-            color="primary"
-            className={classes.button}
-            onClick={() => {
-              redirectToEditTour(id);
-            }}
-          >
-            Изменить
-          </Button>
+          {company && company._id === currentUser.userId ? (
+            <Button
+              variant="contained"
+              color="primary"
+              className={classes.button}
+              onClick={() => {
+                redirectToEditTour(id);
+              }}
+            >
+              Изменить
+            </Button>
+          ) : null}
         </Paper>
       </main>
     </React.Fragment>
   );
 };
 
-const mapStateToProps = ({ fullDescription }) => {
-  return {
-    fullDescription,
-  };
+const mapStateToProps = (store) => {
+  return store;
 };
 
 const mapDispatchToProps = (dispatch, ownProps) => {

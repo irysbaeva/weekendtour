@@ -8,13 +8,15 @@ import Link from "@material-ui/core/Link";
 import Grid from "@material-ui/core/Grid";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
+import Snackbar from "@material-ui/core/Snackbar";
+import MuiAlert from "@material-ui/lab/Alert";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import { fetchLogin } from "../redux/actions";
 import { connect } from "react-redux";
-import compose from "../compose";
+import compose from "../utils/compose";
 import withTourService from "../with-tour-service";
-// import Notification from "./notification";
+
 const useStyles = makeStyles((theme) => ({
   paper: {
     marginTop: theme.spacing(8),
@@ -40,21 +42,25 @@ const Login = (store) => {
   const history = useHistory();
   const [user, setUser] = useState({});
   const { isLoggedin, fetchLogin } = store;
+  const [open, setOpen] = useState(false);
 
-  const onEmailAdded = (email) => {
-    setUser({ ...user, email: email });
+  const handleClick = () => {
+    setOpen(true);
   };
-  const onPasswordAdded = (password) => {
-    setUser({ ...user, password: password });
+  const handleClose = () => {
+    setOpen(false);
   };
-  console.log(`status login ${isLoggedin}`);
+
+  const changeHandler = (event) => {
+    setUser({ ...user, [event.target.name]: event.target.value });
+  };
 
   const redirect = () => {
     history.push(`/`);
   };
   return (
     <div>
-      {isLoggedin && redirect()}
+      {isLoggedin && redirect() && open}
 
       <Container component="main" maxWidth="xs">
         <CssBaseline />
@@ -63,7 +69,7 @@ const Login = (store) => {
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
-            Login
+            Войти
           </Typography>
           <form className={classes.form} noValidate>
             <Grid container spacing={2}>
@@ -75,8 +81,8 @@ const Login = (store) => {
                   id="email"
                   label="Email"
                   name="email"
-                  // autoComplete="email"
-                  onChange={(e) => onEmailAdded(e.target.value)}
+                  autoComplete="email"
+                  onChange={changeHandler}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -88,8 +94,8 @@ const Login = (store) => {
                   label="Пароль"
                   type="password"
                   id="password"
-                  // autoComplete="current-password"
-                  onChange={(e) => onPasswordAdded(e.target.value)}
+                  autoComplete="current-password"
+                  onChange={changeHandler}
                 />
               </Grid>
               <Grid item xs={12}></Grid>
@@ -101,13 +107,27 @@ const Login = (store) => {
               color="primary"
               className={classes.submit}
               onClick={(event) => {
-                console.log(user);
                 event.preventDefault();
-                fetchLogin(user);
+                fetchLogin(user).then((data) => {
+                  console.log(`then${data}`);
+                  if (data !== "Auth succesful") {
+                    handleClick();
+                  }
+                });
               }}
             >
-              login
+              Войти
             </Button>
+            <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+              <MuiAlert
+                elevation={6}
+                variant="filled"
+                severity="error"
+                onClose={handleClose}
+              >
+                Неверный логин или пароль!
+              </MuiAlert>
+            </Snackbar>
             <Grid container>
               <Grid item>
                 <Link href="/signup" variant="body2">

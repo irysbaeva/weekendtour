@@ -1,4 +1,4 @@
-import moment from "moment";
+import transformTour from "../utils/transformTour";
 
 export const titleAdded = (e) => ({ type: "ADD_TITLE", payload: e });
 export const startDateAdded = (e) => ({ type: "ADD_START_DATE", payload: e });
@@ -25,20 +25,6 @@ const toursError = (error) => {
   return { type: "FETCH_TOURS_FAILURE", payload: error };
 };
 
-const transformTour = (tour) => {
-  const dateFormat = (date) => {
-    moment.locale("ru");
-    return moment(date, "YYYY-MM-DD").format("DD.MM.YYYY");
-  };
-
-  return {
-    ...tour,
-    id: tour._id,
-    startDate: dateFormat(tour.startDate),
-    endDate: dateFormat(tour.endDate),
-    company: tour.company.companyName,
-  };
-};
 export const fetchTours = (tourService, dispatch) => () => {
   dispatch(toursRequested());
   tourService
@@ -49,16 +35,10 @@ export const fetchTours = (tourService, dispatch) => () => {
     .catch((err) => dispatch(toursError(err)));
 };
 
-export const tourLoaded = (tour) => {
-  return { type: "FETCH_TOUR_SUCCESS", payload: tour };
-};
-
 export const fetchTour = (tourService, dispatch) => (id) => {
-  tourService
+  return tourService
     .getTour(id)
-    .then(({ data }) => {
-      dispatch(tourLoaded(transformTour(data)));
-    })
+    .then(({ data }) => transformTour(data))
     .catch((err) => dispatch(toursError(err)));
 };
 const clearNewTourInfo = () => ({ type: "CLEAR_NEW_TOUR_INFO" });
@@ -66,7 +46,10 @@ const clearNewTourInfo = () => ({ type: "CLEAR_NEW_TOUR_INFO" });
 export const fetchNewTour = (tourService, dispatch) => (data) => {
   tourService
     .addTour(data)
-    .then(dispatch(clearNewTourInfo()))
+    .then(({ data }) => {
+      console.log(data.message);
+      dispatch(clearNewTourInfo());
+    })
     .catch((err) => console.log(err));
 };
 
@@ -78,44 +61,48 @@ export const fetchEditTour = (tourService, dispatch) => (id, data) => {
   // .catch((err) => console.log(err));
 };
 
-const addUser = () => {
-  return { type: "ADD_USER_SUCCESS" };
-};
-export const loginUser = () => {
-  return { type: "LOGIN_USER_SUCCESS" };
+export const setUser = (user) => {
+  return { type: "SET_USER", payload: user };
 };
 
 export const logoutUser = () => {
-  return { type: "LOGOUT_USER_SUCCESS" };
+  return { type: "LOGOUT_USER" };
 };
+
 export const fetchNewUser = (tourService, dispatch) => (data) => {
-  tourService
+  return tourService
     .addUser(data)
     .then(({ data }) => {
-      dispatch(addUser);
-      localStorage.setItem("token", data.token);
+      console.log(data);
+      if (data.message === "User created") {
+        console.log(data.user);
+
+        dispatch(setUser(data.user));
+        localStorage.setItem("token", data.token);
+        return data.message;
+      }
     })
-    .catch((err) => console.log(err));
+    .catch((err) => {console.log(err); return err});
 };
 
 export const fetchLogin = (tourService, dispatch) => (data) => {
   return tourService
     .login(data)
     .then(({ data }) => {
+     
+      
       if (data.message === "Auth succesful") {
-        dispatch(loginUser());
+        dispatch(setUser(data.user));
         localStorage.setItem("token", data.token);
+        return data.message;
       }
     })
-    .catch((err) => console.log(err));
+    .catch((err) => {
+      return err;
+    });
 };
 
-export const firstNameAdded = (e) => ({ type: "ADD_FIRST_NAME", payload: e });
-export const lastNameAdded = (e) => ({ type: "ADD_LAST_NAME", payload: e });
-export const tourAdded = (e) => ({ type: "ADD_TOUR", payload: e });
-export const emailAdded = (e) => ({ type: "ADD_EMAIL", payload: e });
-export const phoneAdded = (e) => ({ type: "ADD_PHONE", payload: e });
-export const bookSeats = (e) => ({ type: "BOOK_SEATS", payload: e });
+export const addTourToBook = (e) => ({ type: "ADD_TOUR_TO_BOOK", payload: e });
 
 const clearBookingInfo = () => ({ type: "CLEAR_BOOKING_INFO" });
 const bookingsLoaded = (bookings) => {
@@ -126,7 +113,7 @@ const transformBooking = (booking) => {
   return {
     ...booking,
     id: booking._id,
-    tour: booking.tour? booking.tour.title : "Тур отменен"
+    tour: booking.tour ? booking.tour.title : "Тур отменен",
   };
 };
 export const fetchBookings = (tourService, dispatch) => () => {

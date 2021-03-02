@@ -57,10 +57,7 @@ function AddTourReview({ newTour }) {
       primary: "Стоимость",
       secondary: price,
     },
-    {
-      primary: "Организатор",
-      secondary: company,
-    },
+ 
     {
       primary: "Количество мест",
       secondary: seats,

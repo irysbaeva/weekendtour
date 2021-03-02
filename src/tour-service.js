@@ -11,9 +11,11 @@ const tourService = {
   getTours: () => axios.get("tours"),
   addTour: (data) => {
     let fd = new FormData();
+    let token = localStorage.getItem("token")
     let config = {
       headers: {
         "content-type": "multipart/form-data",
+        Authorization: `Bearer ${token}` 
       },
     };
     for (let key in data) {
@@ -22,7 +24,13 @@ const tourService = {
     return axios.post("tours", fd, config);
   },
   getTour: (id) => axios.get(`tours/${id}`),
-  editTour: (id, data) => axios.put(`tours/${id}/edit`, data),
+  editTour: (id, data) => {
+    let token = localStorage.getItem("token");
+    let config = {
+      headers: { Authorization: `Bearer ${token}` },
+    };
+    console.log(token);
+    return axios.put(`tours/${id}/edit`, data, config)},
 
   deleteTour: (id) => {
     let token = localStorage.getItem("token");
@@ -39,7 +47,10 @@ const tourService = {
   addUser: (data) => axios.post("/signup", data),
   login: (data) => axios.post("/login", data),
   addBooking: (data) => axios.post("bookings", data),
-  getBookings: () => axios.get("bookings"),
+  getBookings: () => {  let token = localStorage.getItem("token");
+    let config = {
+      headers: { Authorization: `Bearer ${token}` },
+    };return axios.get("bookings", config)},
 };
 
 export default tourService;

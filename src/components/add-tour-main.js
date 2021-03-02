@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Paper from "@material-ui/core/Paper";
@@ -10,14 +10,11 @@ import Typography from "@material-ui/core/Typography";
 import AddTourForm from "./add-tour-form";
 import AddTourReview from "./add-tour-review";
 import { connect } from "react-redux";
-import compose from "../compose";
+import compose from "../utils/compose";
 import withTourService from "../with-tour-service";
-import { fetchTours, fetchNewTour } from "../redux/actions";
+import { fetchNewTour } from "../redux/actions";
 
 const useStyles = makeStyles((theme) => ({
-  appBar: {
-    position: "relative",
-  },
   layout: {
     width: "auto",
     marginLeft: theme.spacing(2),
@@ -64,9 +61,9 @@ function getStepContent(step) {
   }
 }
 
-function AddTour({ newTour, fetchNewTour, fetchTours }) {
+function AddTour({ newTour, fetchNewTour, currentUser, fetchTours }) {
   const classes = useStyles();
-  const [activeStep, setActiveStep] = React.useState(0);
+  const [activeStep, setActiveStep] = useState(0);
 
   const handleNext = () => {
     setActiveStep(activeStep + 1);
@@ -75,7 +72,7 @@ function AddTour({ newTour, fetchNewTour, fetchTours }) {
   const handleBack = () => {
     setActiveStep(activeStep - 1);
   };
-
+ 
   return (
     <React.Fragment>
       <CssBaseline />
@@ -112,9 +109,8 @@ function AddTour({ newTour, fetchNewTour, fetchTours }) {
                     color="primary"
                     onClick={async () => {
                       handleNext();
-                      if (activeStep === steps.length - 1) {
-                        await fetchNewTour(newTour);
-                        fetchTours();
+                      if (activeStep === steps.length - 1  ) {
+                        await fetchNewTour({ ...newTour, company: currentUser.userId});
                       }
                     }}
                     className={classes.button}
@@ -131,15 +127,14 @@ function AddTour({ newTour, fetchNewTour, fetchTours }) {
   );
 }
 
-const mapStateToProps = ({ newTour }) => {
-  return { newTour };
+const mapStateToProps = ({ newTour, currentUser }) => {
+  return { newTour, currentUser };
 };
 
 const mapDispatchToProps = (dispatch, ownProps) => {
   const { tourService } = ownProps;
   return {
     fetchNewTour: fetchNewTour(tourService, dispatch),
-    fetchTours: fetchTours(tourService, dispatch),
   };
 };
 

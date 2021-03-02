@@ -3,6 +3,7 @@ let initialState = {
   loading: true,
   error: null,
   isLoggedin: false,
+  currentUser: null,
   newTour: {
     id: null,
     title: null,
@@ -15,32 +16,8 @@ let initialState = {
     image: null,
     seats: null,
   },
-  fullDescription: {
-    id: null,
-    title: null,
-    startDate: null,
-    endDate: null,
-    description: null,
-    price: null,
-    includes: null,
-    company: null,
-    image: null,
-    seats: null,
-  },
-
-  users: [],
-  newUser: {
-    companyName: null,
-    email: null,
-    password: null,
-  },
   newBooking: {
-    firstName: null,
-    lastName: null,
-    seats: null,
     tour: null,
-    email: null,
-    phone: null,
   },
   bookings: [],
 };
@@ -61,22 +38,6 @@ const reducer = (state = initialState, action) => {
         tours: action.payload,
         loading: false,
         error: null,
-      };
-    case "FETCH_TOUR_SUCCESS":
-      return {
-        ...state,
-        fullDescription: {
-          id: action.payload.id,
-          title: action.payload.title,
-          startDate: action.payload.startDate,
-          endDate: action.payload.endDate,
-          description: action.payload.description,
-          price: action.payload.price,
-          includes: action.payload.includes,
-          company: action.payload.company,
-          image: action.payload.image,
-          seats: action.payload.seats,
-        },
       };
 
     case "FETCH_TOURS_FAILURE":
@@ -132,81 +93,35 @@ const reducer = (state = initialState, action) => {
         newTour: { ...state.newTour, seats: action.payload },
       };
 
-    case "ADD_USER_SUCCESS":
+    case "SET_USER":
       return {
         ...state,
         isLoggedin: true,
+        currentUser: action.payload
       };
-    case "LOGIN_USER_SUCCESS":
-      return {
-        ...state,
-        isLoggedin: true,
-      };
-    case "LOGOUT_USER_SUCCESS":
+
+    case "LOGOUT_USER":
       return {
         ...state,
         isLoggedin: false,
+        currentUser: {}
       };
-    case "ADD_TOUR":
+    case "ADD_TOUR_TO_BOOK":
       return {
         ...state,
         newBooking: { ...state.newBooking, tour: action.payload },
       };
-    case "ADD_FIRST_NAME":
-      return {
-        ...state,
-        newBooking: { ...state.newBooking, firstName: action.payload },
-      };
-    case "ADD_LAST_NAME":
-      return {
-        ...state,
-        newBooking: { ...state.newBooking, lastName: action.payload },
-      };
-    case "ADD_EMAIL":
-      return {
-        ...state,
-        newBooking: { ...state.newBooking, email: action.payload },
-      };
-    case "ADD_PHONE":
-      return {
-        ...state,
-        newBooking: { ...state.newBooking, phone: action.payload },
-      };
-    case "BOOK_SEATS":
-      return {
-        ...state,
-        newBooking: { ...state.newBooking, seats: action.payload },
-      };
-
     case "CLEAR_BOOKING_INFO":
       return {
         ...state,
-        newBooking: {
-          firstName: null,
-          lastName: null,
-          seats: null,
-          tour: null,
-          email: null,
-          phone: null,
-        },
+        newBooking: {}
       };
     case "CLEAR_NEW_TOUR_INFO":
       return {
         ...state,
-        newTour: {
-          id: null,
-          title: null,
-          startDate: null,
-          endDate: null,
-          description: null,
-          price: null,
-          includes: null,
-          company: null,
-          image: null,
-          seats: null,
-        },
+        newTour: {}
       };
-      
+
     case "FETCH_BOOKINGS_SUCCESS":
       return {
         ...state,

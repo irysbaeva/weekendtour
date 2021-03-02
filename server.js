@@ -57,18 +57,21 @@ app.delete("/tours/:id", checkAuth, (req, res) => {
 
   Tour.deleteOne({ _id: id }).then((tour) => {
     if (tour) {
+      console.log(tour.company);
       res.json({ status: "deleted" });
     } else {
       res.json({ status: "error" });
     }
   });
 });
-app.get("/tours/:id/edit", checkAuth, (req, res) => {
-  const { id } = req.params;
-  stringify(Tour.findById(id).then((data) => res.send(data)));
-});
+// app.get("/tours/:id/edit", checkAuth, (req, res) => {
+//   const { id } = req.params;
+//   stringify(Tour.findById(id).then((data) => res.send(data)).catch((err) => {
+//     res.status(401).json({ error: err });
+//   }));
+// });
 
-app.put("/tours/:id/edit", (req, res) => {
+app.put("/tours/:id/edit", checkAuth, (req, res) => {
   Tour.findByIdAndUpdate(req.params.id, { $set: req.body }, (err) => {
     if (err) {
       res.send(err);
@@ -77,10 +80,12 @@ app.put("/tours/:id/edit", (req, res) => {
   });
 });
 
-app.post("/tours", upload.single("image"), (req, res) => {
+app.post("/tours", checkAuth, upload.single("image"), (req, res) => {
   const path = req.file ? req.file.path : null;
 
   const data = req.body;
+  console.log(data);
+
   const tour = new Tour({
     _id: new mongoose.Types.ObjectId(),
     title: data.title,
@@ -95,16 +100,27 @@ app.post("/tours", upload.single("image"), (req, res) => {
   });
   tour
     .save()
-    .then(() => res.send({ status: "ok" }))
+    .then(() => res.status(201).json({ message: "Tour added" }))
     .catch((err) => {
-      res.send(err);
+      res.status(500).json({ error: err });
     });
+  // .then(() => res.send({ status: "ok" }))
+  // .catch((err) => {
+  //   res.send(err);
+  // });
 });
 
 app.get("/bookings", (req, res) => {
   Booking.find()
     .populate("tour")
-    .then((bookings) => res.status(200).json(bookings))
+    .then((bookings) => {
+      const b = bookings.filter(
+        (booking) =>
+          booking.tour && booking.tour.company == "600e9d3249f7533f96534520"
+      );
+      console.log(b);
+      res.status(200).json(b);
+    })
     .catch((err) => {
       res.status(500).json({ error: err });
     });
@@ -120,7 +136,7 @@ app.post("/bookings", (req, res) => {
     phone: data.phone,
     seats: data.seats,
     tour: data.tour,
-    // company: data.company,
+    company: data.company,
   });
   booking
     .save()
@@ -145,19 +161,25 @@ app.post("/signup", (req, res) => {
           } else {
             const user = new User({
               _id: new mongoose.Types.ObjectId(),
-              companyName: req.body.companyName,
               email: req.body.email,
               password: hash,
+              companyName: req.body.companyName,
             });
             user
               .save()
               .then((result) => {
-                console.log(result);
-                res.status(201).json({ message: "User created" });
+                console.log(`this ${result}`);
+                const token = jwt.sign(
+                  { email:result.email, userId: result._id },
+                  "secret",
+                  { expiresIn: "1h" })
+             return res.status(201).json({
+                  message: "User created", token: token,
+                  user: { userId: result._id, companyName: result.companyName }, });
               })
               .catch((err) => {
                 console.log(err);
-                res.status(500).json({ error: err });
+                res.status(501).json({ error: err });
               });
           }
         });
@@ -186,7 +208,11 @@ app.post("/login", (req, res) => {
           );
           return res
             .status(200)
-            .json({ message: "Auth succesful", token: token });
+            .json({
+              message: "Auth succesful",
+              token: token,
+              user: { userId: user[0]._id, companyName: user[0].companyName },
+            });
         }
         res.status(401).json({ message: "Auth failed" });
       });

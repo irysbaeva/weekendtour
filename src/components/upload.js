@@ -19,7 +19,8 @@ export const UploadImage = ({ imageAdded }) => {
 
   return (
     <div>
-      <Button onClick={handleOpen}>Add Image</Button>
+      <Button variant="contained"
+        color="primary" onClick={handleOpen}>Добавить фото</Button>
       <DropzoneDialog
         open={open}
         onSave={fileSelectedHandler}

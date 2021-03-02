@@ -13,7 +13,7 @@ import {
   includesAdded,
   priceAdded,
   companyAdded,
-  seatsAdded
+  seatsAdded,
 } from "../redux/actions";
 
 const AddTourForm = ({
@@ -27,11 +27,8 @@ const AddTourForm = ({
   seatsAdded,
   newTour,
 }) => {
+ 
 
-
-
-
-  
   return (
     <React.Fragment>
       <Typography variant="h6" gutterBottom>
@@ -110,16 +107,17 @@ const AddTourForm = ({
             onChange={(e) => priceAdded(e.target.value)}
           />
         </Grid>
-        <Grid item xs={12} sm={6}>
+        {/* <Grid item xs={12} sm={6}>
           <TextField
             required
             id="companyName"
             name="companyName"
             label="Организатор"
             fullWidth
-            onChange={(e) => companyAdded(e.target.value)}
+            value={userId}
+            // onChange={(e) => companyAdded(e.target.value)}
           />
-        </Grid>
+        </Grid> */}
         <Grid item xs={12} sm={6}>
           <TextField
             required
@@ -154,6 +152,6 @@ const mapDispatchToProps = {
   priceAdded,
   includesAdded,
   companyAdded,
-  seatsAdded
+  seatsAdded,
 };
 export default connect(mapStateToProps, mapDispatchToProps)(AddTourForm);

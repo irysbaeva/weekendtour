@@ -7,7 +7,7 @@ import { connect } from "react-redux";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import { makeStyles } from "@material-ui/core/styles";
-import compose from "../compose";
+import compose from "../utils/compose";
 import withTourService from "../with-tour-service";
 import Paper from "@material-ui/core/Paper";
 import List from "@material-ui/core/List";
@@ -16,16 +16,7 @@ import ListItemText from "@material-ui/core/ListItemText";
 
 import MenuItem from "@material-ui/core/MenuItem";
 
-
-import {
-  fetchNewBooking,
-  firstNameAdded,
-  lastNameAdded,
-  emailAdded,
-  phoneAdded,
-  bookSeats,
-  tourAdded,
-} from "../redux/actions";
+import { fetchNewBooking} from "../redux/actions";
 
 const useStyles = makeStyles((theme) => ({
   appBar: {
@@ -70,28 +61,25 @@ const useStyles = makeStyles((theme) => ({
 
 const BookTourForm = (store) => {
   const classes = useStyles();
-  // let { id } = useParams();
   const history = useHistory();
-  const {
-    fetchNewBooking,
-    newBooking,
-    tours,
-    firstNameAdded,
-    lastNameAdded,
-    emailAdded,
-    phoneAdded,
-    bookSeats,
-    tourAdded,
-  } = store;
+  const { fetchNewBooking, newBooking, tours } = store;
 
-  let tour = tours.filter((tour) => tour.id === newBooking.tour)[0];
+  const [booking, setBooking] = useState({});
+
+  let tour = tours.find((tour) => tour.id === newBooking.tour);
   const [selectedTour, setSelectedTour] = useState(tour);
+  console.log(tour);
 
-  const onChangeTour = (title) => {
-    const changedTour = tours.filter((tour) => tour.title === title)[0];
+  const onChangeTour = (event) => {
+    const changedTour = tours.find((tour) => tour.title === event.target.value);
+    setBooking({ ...booking, [event.target.name]: changedTour.id });
     setSelectedTour(changedTour);
-    tourAdded(changedTour.id);
   };
+
+  const changeHandler = (event) => {
+    setBooking({ ...booking, [event.target.name]: event.target.value });
+  };
+
   let tourInfo = [];
   const tourInfoGet = () => {
     if (selectedTour) {
@@ -123,7 +111,7 @@ const BookTourForm = (store) => {
         },
         {
           primary: "Организатор",
-          secondary: company,
+          secondary: company ? company.companyName : null,
         },
       ]);
     }
@@ -168,8 +156,9 @@ const BookTourForm = (store) => {
                 label={selectedTour ? "Изменить тур" : "Выбрать тур"}
                 defaultValue=""
                 select
+                name="tour"
                 fullWidth
-                onChange={(e) => onChangeTour(e.target.value)}
+                onChange={(e) => onChangeTour(e)}
               >
                 {tours.map((tour) => (
                   <MenuItem key={`selected${tour.title}`} value={tour.title}>
@@ -185,7 +174,7 @@ const BookTourForm = (store) => {
                 id={"firstName"}
                 name={"firstName"}
                 label={"Имя"}
-                onChange={(e) => firstNameAdded(e.target.value)}
+                onChange={changeHandler}
                 fullWidth
               />
             </Grid>
@@ -195,7 +184,7 @@ const BookTourForm = (store) => {
                 id={"lastName"}
                 name={"lastName"}
                 label={"Фамилия"}
-                onChange={(e) => lastNameAdded(e.target.value)}
+                onChange={changeHandler}
                 fullWidth
               />
             </Grid>
@@ -205,7 +194,7 @@ const BookTourForm = (store) => {
                 id={"email"}
                 name={"email"}
                 label={"Email"}
-                onChange={(e) => emailAdded(e.target.value)}
+                onChange={changeHandler}
                 fullWidth
               />
             </Grid>
@@ -215,7 +204,7 @@ const BookTourForm = (store) => {
                 id={"phone"}
                 name={"phone"}
                 label={"Телефон"}
-                onChange={(e) => phoneAdded(e.target.value)}
+                onChange={changeHandler}
                 fullWidth
               />
             </Grid>
@@ -223,14 +212,14 @@ const BookTourForm = (store) => {
               <TextField
                 required
                 // id={"seats"}
-                // name={"seats"}
+                name={"seats"}
                 // label={"seats"}
                 id="select"
                 label={"Выбрать количество мест"}
                 defaultValue=""
                 select
                 fullWidth
-                onChange={(e) => bookSeats(e.target.value)}
+                onChange={changeHandler}
               >
                 {[1, 2, 3, 4, 5, 6].map((el) => (
                   <MenuItem key={`selected${el}`} value={el}>
@@ -238,14 +227,12 @@ const BookTourForm = (store) => {
                   </MenuItem>
                 ))}{" "}
               </TextField>
-              
             </Grid>
             <Button
               variant="contained"
               color="primary"
               onClick={() => {
-                fetchNewBooking(newBooking);
-
+                fetchNewBooking(booking);
                 history.push("/");
               }}
               className={classes.button}
@@ -267,12 +254,6 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   const { tourService } = ownProps;
   return {
     fetchNewBooking: fetchNewBooking(tourService, dispatch),
-    firstNameAdded: (name) => dispatch(firstNameAdded(name)),
-    lastNameAdded: (lastName) => dispatch(lastNameAdded(lastName)),
-    emailAdded: (email) => dispatch(emailAdded(email)),
-    phoneAdded: (phone) => dispatch(phoneAdded(phone)),
-    bookSeats: (seats) => dispatch(bookSeats(seats)),
-    tourAdded: (tourId) => dispatch(tourAdded(tourId)),
   };
 };
 

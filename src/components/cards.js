@@ -7,12 +7,14 @@ import CardContent from "@material-ui/core/CardContent";
 import CardMedia from "@material-ui/core/CardMedia";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
+import AttachMoneyIcon from "@material-ui/icons/AttachMoney";
+import DateRangeIcon from "@material-ui/icons/DateRange";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
-import { fetchTours, tourAdded } from "../redux/actions";
+import { fetchTours, addTourToBook } from "../redux/actions";
 import { useEffect } from "react";
 import { useHistory } from "react-router-dom";
-import compose from "../compose";
+import compose from "../utils/compose";
 import withTourService from "../with-tour-service";
 import ErrorIndicator from "./error-indicator";
 import Spinner from "./spinner";
@@ -45,8 +47,8 @@ const Cards = (store) => {
     loading,
     error,
     isLoggedin,
-
-    tourAdded,
+    currentUser,
+    addTourToBook,
   } = store;
   useEffect(() => {
     fetchTours();
@@ -63,7 +65,7 @@ const Cards = (store) => {
     history.push(`tours/${id}`);
   };
   const bookTour = (id) => {
-    tourAdded(id);
+    addTourToBook(id);
 
     history.push(`bookings/new`);
   };
@@ -75,60 +77,80 @@ const Cards = (store) => {
   return (
     <Container className={classes.cardGrid} maxWidth="md">
       <Grid container spacing={4}>
-        {tours.map(({ title, startDate, endDate, price, id, image }) => (
-          <Grid item key={title} xs={12} sm={6} md={4}>
-            <Card className={classes.card}>
-              <CardMedia
-                className={classes.cardMedia}
-                image={`http://localhost:5000/${image}`}
-                title="Image title"
-              />
+        {tours.map(
+          ({ title, startDate, endDate, price, id, image, company }) => (
+            <Grid item key={title} xs={12} sm={6} md={4}>
+              <Card className={classes.card}>
+                <CardMedia
+                  className={classes.cardMedia}
+                  image={`http://localhost:5000/${image}`}
+                  title="Image title"
+                />
 
-              <CardContent className={classes.cardContent}>
-                <Typography gutterBottom variant="h5" component="h2">
-                  {title}
-                </Typography>
-                <Typography>
-                  {startDate} - {endDate}
-                </Typography>
-                <Typography>{price} руб.</Typography>
-              </CardContent>
-              <CardActions>
-                <Button
-                  size="small"
-                  color="primary"
-                  onClick={() => {
-                    getInfo(id);
-                  }}
-                >
-                  Подробнее
-                </Button>
+                <CardContent className={classes.cardContent}>
+                  <Typography gutterBottom variant="h5" component="h2">
+                    {title}
+                  </Typography>
+                  <Typography>
+                    <DateRangeIcon fontSize="small" color="primary" />
+                    {startDate} - {endDate}
+                  </Typography>
+                  <Typography>
+                    <AttachMoneyIcon fontSize="small" color="primary" />
+                    {price} руб.
+                  </Typography>
+                  <Typography>
+                    Организатор {company.companyName.toUpperCase()}
+                  </Typography>
+                </CardContent>
+                <CardActions>
+                  <Grid container spacing={4}>
+                    <Grid item sm={5}>
+                      <Button
+                        size="small"
+                        variant="contained"
+                        color="primary"
+                        onClick={() => {
+                          getInfo(id);
+                        }}
+                      >
+                        Подробнее
+                      </Button>
+                    </Grid>
 
-                {isLoggedin ? (
-                  <Button
-                    onClick={() => {
-                      deleteTour(id);
-                    }}
-                    size="small"
-                    color="primary"
-                  >
-                    Удалить
-                  </Button>
-                ) : (
-                  <Button
-                    size="small"
-                    color="primary"
-                    onClick={() => {
-                      bookTour(id);
-                    }}
-                  >
-                    Забронировать
-                  </Button>
-                )}
-              </CardActions>
-            </Card>
-          </Grid>
-        ))}
+                    <Grid item sm={5}>
+                      {isLoggedin ? (
+                        company && company._id === currentUser.userId ? (
+                          <Button
+                            onClick={() => {
+                              deleteTour(id);
+                            }}
+                            size="small"
+                            variant="contained"
+                            color="primary"
+                          >
+                            Удалить
+                          </Button>
+                        ) : null
+                      ) : (
+                        <Button
+                          size="small"
+                          variant="contained"
+                          color="primary"
+                          onClick={() => {
+                            bookTour(id);
+                          }}
+                        >
+                          Забронировать
+                        </Button>
+                      )}
+                    </Grid>
+                  </Grid>
+                </CardActions>
+              </Card>
+            </Grid>
+          )
+        )}
       </Grid>
     </Container>
   );
@@ -140,6 +162,7 @@ function mapStateToProps(store) {
     loading: store.loading,
     error: store.error,
     isLoggedin: store.isLoggedin,
+    currentUser: store.currentUser,
   };
 }
 
@@ -147,8 +170,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   const { tourService } = ownProps;
   return {
     fetchTours: fetchTours(tourService, dispatch),
-    tourAdded: (id) => dispatch(tourAdded(id)),
-  
+    addTourToBook: (id) => dispatch(addTourToBook(id)),
   };
 };
 

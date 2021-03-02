@@ -1,13 +1,13 @@
-import React from "react";
+import React, { useState } from "react";
 import { DataGrid } from "@material-ui/data-grid";
 import { fetchTours } from "../redux/actions";
 import { useEffect } from "react";
-import compose from "../compose";
+import compose from "../utils/compose";
 import withTourService from "../with-tour-service";
 import { connect } from "react-redux";
 import Spinner from "./spinner";
 import ErrorIndicator from "./error-indicator";
-import { Button } from "@material-ui/core";
+// import { Button } from "@material-ui/core";
 
 const columns = [
   { field: "title", headerName: "Маршрут", width: 210 },
@@ -32,17 +32,19 @@ const columns = [
     sortable: false,
     width: 150,
   },
-  {
-    field: "button",
-    headerName: "button",
-    sortable: false,
-    width: 150,
-  },
 ];
 
 const Schedule = ({ fetchTours, tours, loading, error }) => {
+  const [transformTours, setTransformTours] = useState([]);
   useEffect(() => {
     fetchTours();
+
+    setTransformTours(
+      tours.map((tour) => ({
+        ...tour,
+        company: tour.company.companyName,
+      }))
+    );
   }, [fetchTours]);
 
   if (loading) {
@@ -53,10 +55,15 @@ const Schedule = ({ fetchTours, tours, loading, error }) => {
   }
 
   return (
-    <div style={{ height: 600, width: "100%" }}>
-      <DataGrid rows={tours} columns={columns} pageSize={10}  onCellClick={(e)=> console.log(e.row._id)
-      } />
-      <Button></Button>
+    <div>
+      <div style={{ height: 600, width: "100%" }}>
+        <DataGrid
+          rows={transformTours}
+          columns={columns}
+          pageSize={5}
+          onRowClick={(e) => console.log(e.row._id)}
+        />
+      </div>
     </div>
   );
 };

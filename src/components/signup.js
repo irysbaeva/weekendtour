@@ -12,7 +12,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import { fetchNewUser } from "../redux/actions";
 import { connect } from "react-redux";
-import compose from "../compose";
+import compose from "../utils/compose";
 import withTourService from "../with-tour-service";
 
 const useStyles = makeStyles((theme) => ({
@@ -35,19 +35,14 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const SignUp = ({ fetchNewUser }) => {
+const SignUp = (store) => {
   const classes = useStyles();
   const history = useHistory();
   const [newUser, setNewUser] = useState({});
 
-  const onCompanyAdded = (companyName) => {
-    setNewUser({ ...newUser, companyName: companyName });
-  };
-  const onEmailAdded = (email) => {
-    setNewUser({ ...newUser, email: email });
-  };
-  const onPasswordAdded = (password) => {
-    setNewUser({ ...newUser, password: password });
+  const { isLoggedin, fetchNewUser } = store;
+  const changeHandler = (event) => {
+    setNewUser({ ...newUser, [event.target.name]: event.target.value });
   };
 
   const redirect = () => {
@@ -55,98 +50,94 @@ const SignUp = ({ fetchNewUser }) => {
   };
   return (
     <div>
-    <Container component="main" maxWidth="xs">
-      <CssBaseline />
-      <div className={classes.paper}>
-        <Avatar className={classes.avatar}>
-          <LockOutlinedIcon />
-        </Avatar>
-        <Typography component="h1" variant="h5">
-          Sign up
-        </Typography>
-        <form className={classes.form} noValidate>
-          <Grid container spacing={2}>
-            <Grid item xs={12}>
-              <TextField
-                name="company"
-                variant="outlined"
-                required
-                fullWidth
-                id="company"
-                label="Название компании"
-                autoFocus
-                onChange={(e) => onCompanyAdded(e.target.value)}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                variant="outlined"
-                required
-                fullWidth
-                id="email"
-                label="Email"
-                name="email"
-                // autoComplete="email"
-                onChange={(e) => onEmailAdded(e.target.value)}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                variant="outlined"
-                required
-                fullWidth
-                name="password"
-                label="Пароль"
-                type="password"
-                id="password"
-                // autoComplete="current-password"
-                onChange={(e) => onPasswordAdded(e.target.value)}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              {/* <FormControlLabel
-                control={<Checkbox value="allowExtraEmails" color="primary" />}
-                label="I want to receive inspiration, marketing promotions and updates via email."
-              /> */}
-            </Grid>
-          </Grid>
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            color="primary"
-            className={classes.submit}
-            onClick={(e) => {
-              e.preventDefault();
-              console.log(newUser);
-              fetchNewUser(newUser);
-              redirect();
-            }}
-          >
+      {isLoggedin && redirect()}
+
+      <Container component="main" maxWidth="xs">
+        <CssBaseline />
+        <div className={classes.paper}>
+          <Avatar className={classes.avatar}>
+            <LockOutlinedIcon />
+          </Avatar>
+          <Typography component="h1" variant="h5">
             Зарегистрироваться
-          </Button>
-          <Grid container justify="flex-end">
-            <Grid item>
-              <Link href="/login" variant="body2">
-                Already have an account? Sign in
-              </Link>
+          </Typography>
+
+          <form className={classes.form} noValidate>
+            <Grid container spacing={2}>
+              <Grid item xs={12}>
+                <TextField
+                  name="companyName"
+                  variant="outlined"
+                  required
+                  fullWidth
+                  id="companyName"
+                  label="Название компании"
+                  autoFocus
+                  onChange={changeHandler}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  variant="outlined"
+                  required
+                  fullWidth
+                  id="email"
+                  label="Email"
+                  name="email"
+                  autoComplete="email"
+                  onChange={changeHandler}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  variant="outlined"
+                  required
+                  fullWidth
+                  name="password"
+                  label="Пароль"
+                  type="password"
+                  id="password"
+                  autoComplete="current-password"
+                  onChange={changeHandler}
+                />
+              </Grid>
+              <Grid item xs={12}></Grid>
             </Grid>
-          </Grid>
-        </form>
-      </div>
-    </Container>
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              color="primary"
+              className={classes.submit}
+              onClick={(e) => {
+                e.preventDefault();
+                fetchNewUser(newUser);
+              }}
+            >
+              Зарегистрироваться
+            </Button>
+            <Grid container justify="flex-end">
+              <Grid item>
+                <Link href="/login" variant="body2">
+                  Уже зарегистрированы? Войти
+                </Link>
+              </Grid>
+            </Grid>
+          </form>
+        </div>
+      </Container>
     </div>
   );
 };
 
-const mapStateToProps = (state) => {
-  return state;
+const mapStateToProps = (store) => {
+  return { isLoggedin: store.isLoggedin };
 };
 
-const mapDispatchToProps = (dispatch,ownProps) => {
+const mapDispatchToProps = (dispatch, ownProps) => {
   const { tourService } = ownProps;
   return {
-    fetchNewUser: fetchNewUser(tourService),
+    fetchNewUser: fetchNewUser(tourService, dispatch),
   };
 };
 

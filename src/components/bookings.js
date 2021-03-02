@@ -2,7 +2,7 @@ import React from "react";
 import { DataGrid } from "@material-ui/data-grid";
 import { fetchBookings } from "../redux/actions";
 import { useEffect } from "react";
-import compose from "../compose";
+import compose from "../utils/compose";
 import withTourService from "../with-tour-service";
 import { connect } from "react-redux";
 import Spinner from "./spinner";

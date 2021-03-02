@@ -11,7 +11,7 @@ const menu = [
   "Главная",
   "График туров",
   "Добавить тур",
-  "Вход",
+  "Вход для туристических компаний",
   "Регистрация",
   "Выйти",
   "Забронировать тур",
@@ -29,7 +29,7 @@ const NavBar = ({ isLoggedin, logoutUser }) => {
   const classes = useStyles();
 
   return (
-    <AppBar position="relative">
+    <AppBar position="sticky">
       <Toolbar>
         <Link to="/" className={classes.link}>
           <Button color="inherit">{menu[0]}</Button>
@@ -46,10 +46,8 @@ const NavBar = ({ isLoggedin, logoutUser }) => {
             <Link
               to="/"
               onClick={() => {
-                logoutUser(); 
+                logoutUser();
                 localStorage.clear();
-
-                console.log(`token...${localStorage.getItem("token")}`);
               }}
             >
               <Button className={classes.link} color="inherit">
@@ -65,13 +63,9 @@ const NavBar = ({ isLoggedin, logoutUser }) => {
             <Link to="/bookings/new" className={classes.link}>
               <Button color="inherit">{menu[6]}</Button>
             </Link>
-            {/* <Link to="/signup" className={classes.link}>
-              <Button color="inherit">{menu[4]}</Button>
-            </Link> */}
             <Link to="/login" className={classes.link}>
-              <Button color="inherit">{menu[3]}</Button>
+                <Button color="inherit" size="small" >{menu[3]}</Button>
             </Link>
-         
           </div>
         )}
       </Toolbar>
