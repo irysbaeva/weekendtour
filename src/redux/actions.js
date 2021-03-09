@@ -16,7 +16,7 @@ export const titleEdited = (e) => ({ type: "EDIT_TITLE", payload: e });
 const toursLoaded = (newTours) => {
   return { type: "FETCH_TOURS_SUCCESS", payload: newTours };
 };
-
+ 
 const toursRequested = () => {
   return { type: "FETCH_TOURS_REQUEST" };
 };
