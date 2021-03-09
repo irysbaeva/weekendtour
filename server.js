@@ -54,10 +54,19 @@ app.get("/tours/:id", (req, res) => {
 
 app.delete("/tours/:id", checkAuth, (req, res) => {
   const { id } = req.params;
+  let tourCreator;
+  Tour.findById(id)
+    .populate("company")
+    .then((data) => {
+      console.log(`tour${JSON.stringify(data.company._id)}`);
+      tourCreator = data.company._id;
+      console.log(`tourcr${tourCreator}`);
+    });
 
+  // if (req.userData.userId === req.body.editedTourData.company)
   Tour.deleteOne({ _id: id }).then((tour) => {
     if (tour) {
-      console.log(tour.company);
+      console.log(`requserdatauserid${req.userData.userId}`);
       res.json({ status: "deleted" });
     } else {
       res.json({ status: "error" });
@@ -72,12 +81,22 @@ app.delete("/tours/:id", checkAuth, (req, res) => {
 // });
 
 app.put("/tours/:id/edit", checkAuth, (req, res) => {
-  Tour.findByIdAndUpdate(req.params.id, { $set: req.body }, (err) => {
-    if (err) {
-      res.send(err);
-    }
-    res.json({ status: "updated" });
-  });
+  if (req.userData.userId === req.body.editedTourData.company) {
+    Tour.findByIdAndUpdate(
+      req.params.id,
+      { $set: req.body.editedTourData },
+      (err) => {
+        if (err) {
+          res.send(err);
+        }
+        res.status(200).json({ status: "updated" });
+      }
+    );
+  } else {
+    return res.status(401).json({
+      message: "Auth failed",
+    });
+  }
 });
 
 app.post("/tours", checkAuth, upload.single("image"), (req, res) => {
@@ -110,16 +129,15 @@ app.post("/tours", checkAuth, upload.single("image"), (req, res) => {
   // });
 });
 
-app.get("/bookings", (req, res) => {
+app.get("/bookings", checkAuth, (req, res) => {
   Booking.find()
     .populate("tour")
     .then((bookings) => {
-      const b = bookings.filter(
-        (booking) =>
-          booking.tour && booking.tour.company == "600e9d3249f7533f96534520"
+      const userBookings = bookings.filter(
+        (booking) => booking.tour && booking.tour.company == req.userData.userId
       );
-      console.log(b);
-      res.status(200).json(b);
+
+      res.status(200).json(userBookings);
     })
     .catch((err) => {
       res.status(500).json({ error: err });
@@ -168,14 +186,16 @@ app.post("/signup", (req, res) => {
             user
               .save()
               .then((result) => {
-                console.log(`this ${result}`);
                 const token = jwt.sign(
-                  { email:result.email, userId: result._id },
+                  { email: result.email, userId: result._id },
                   "secret",
-                  { expiresIn: "1h" })
-             return res.status(201).json({
-                  message: "User created", token: token,
-                  user: { userId: result._id, companyName: result.companyName }, });
+                  { expiresIn: "1h" }
+                );
+                return res.status(201).json({
+                  message: "User created",
+                  token: token,
+                  user: { userId: result._id, companyName: result.companyName },
+                });
               })
               .catch((err) => {
                 console.log(err);
@@ -206,13 +226,11 @@ app.post("/login", (req, res) => {
             "secret",
             { expiresIn: "1h" }
           );
-          return res
-            .status(200)
-            .json({
-              message: "Auth succesful",
-              token: token,
-              user: { userId: user[0]._id, companyName: user[0].companyName },
-            });
+          return res.status(200).json({
+            message: "Auth succesful",
+            token: token,
+            user: { userId: user[0]._id, companyName: user[0].companyName },
+          });
         }
         res.status(401).json({ message: "Auth failed" });
       });

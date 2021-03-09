@@ -11,8 +11,9 @@ import { makeStyles } from "@material-ui/core/styles";
 import compose from "../utils/compose";
 import withTourService from "../with-tour-service";
 import Paper from "@material-ui/core/Paper";
+import moment from "moment";
 
-import { fetchEditTour, fetchTour } from "../redux/actions";
+import { fetchEditTour, fetchTour, fetchTours } from "../redux/actions";
 
 const useStyles = makeStyles((theme) => ({
   appBar: {
@@ -51,11 +52,30 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const EditTourForm = ({ fetchEditTour, fetchTour }) => {
+const EditTourForm = ({ fetchEditTour, fetchTour,fetchTours }) => {
   const classes = useStyles();
   let { id } = useParams();
   const history = useHistory();
-  const [tourInfo, setTourInfo] = useState({});
+
+  const [editedTour, setEditedTour] = useState({});
+
+  useEffect(() => {
+    fetchTour(id).then(
+      ({ title, startDate, endDate, description, includes, price, seats,company }) => {
+        setEditedTour({
+          title: title,
+          startDate: moment(startDate, "DD.MM.YYYY").format("YYYY-MM-DD"),
+          endDate: moment(endDate, "DD.MM.YYYY").format("YYYY-MM-DD"),
+          description: description,
+          includes: includes,
+          price: price,
+          seats: seats,
+          company:company._id
+        });
+      }
+    );
+  }, [fetchTour, id]);
+
   const {
     title,
     startDate,
@@ -63,57 +83,10 @@ const EditTourForm = ({ fetchEditTour, fetchTour }) => {
     description,
     includes,
     price,
-    seats,
-  } = tourInfo;
+    seats
+  } = editedTour;
 
-  const [editedTour, setEditedTour] = useState({});
-  const [titleValue, setTitleValue] = useState(title);
-  const [startDateValue, setStartDateValue] = useState(startDate);
-  const [endDateValue, setEndDateValue] = useState(endDate);
-  const [includesValue, setIncludesValue] = useState(includes);
-  const [priceValue, setPriceValue] = useState(price);
-  const [seatsValue, setSeatsValue] = useState(seats);
-  const [descriptionValue, setDescriptionValue] = useState(description);
-
-  useEffect(() => {
-    fetchTour(id).then((data) => setTourInfo(data));
-  }, [fetchTour, id]);
-
-  console.log(tourInfo);
-
-  const titleEdited = (e) => {
-    setTitleValue(e.target.value);
-        changeHandler(e);
-  };
-
-  const startDateEdited = (e) => {
-    setStartDateValue(e.target.value);
-        changeHandler(e);
-  };
-  const endDateEdited = (e) => {
-    setEndDateValue(e.target.value);
-        changeHandler(e);
-  };
-  const includesEdited = (e) => {
-    setIncludesValue(e.target.value);
-        changeHandler(e);
-  };
-  const priceEdited = (e) => {
-    setPriceValue(e.target.value)
-        changeHandler(e);
-  };
-
-  const descriptionEdited = (e) => {
-    setDescriptionValue(e.target.value);
-        changeHandler(e);
-  };
-
-  const seatsEdited = (e) => {
-    setSeatsValue(e.target.value);
-    changeHandler(e);
-  };
-console.log(editedTour);
-
+  console.log(editedTour);
 
   const changeHandler = (e) => {
     setEditedTour({ ...editedTour, [e.target.name]: e.target.value });
@@ -138,11 +111,11 @@ console.log(editedTour);
                 id="title"
                 name="title"
                 label="Маршрут"
-                onChange={titleEdited}
+                onChange={changeHandler}
                 InputLabelProps={{
                   shrink: true,
                 }}
-                value={titleValue}
+                value={title}
                 fullWidth
               />
             </Grid>
@@ -151,12 +124,13 @@ console.log(editedTour);
                 required
                 id="startDate"
                 name="startDate"
+                type="date"
                 label="Дата начала"
-                onChange={startDateEdited}
+                onChange={changeHandler}
                 InputLabelProps={{
                   shrink: true,
                 }}
-                value={startDateValue}
+                value={startDate}
               />
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -164,12 +138,13 @@ console.log(editedTour);
                 required
                 id="endDate"
                 name="endDate"
+                type="date"
                 label="Дата окончания"
-                onChange={endDateEdited}
+                onChange={changeHandler}
                 InputLabelProps={{
                   shrink: true,
                 }}
-                value={endDateValue}
+                value={endDate}
               />
             </Grid>
             <Grid item xs={12}>
@@ -178,11 +153,11 @@ console.log(editedTour);
                 id="includes"
                 name="includes"
                 label="Включено в стоимость"
-                onChange={includesEdited}
+                onChange={changeHandler}
                 InputLabelProps={{
                   shrink: true,
                 }}
-                value={includesValue}
+                value={includes}
                 fullWidth
               />
             </Grid>
@@ -192,11 +167,11 @@ console.log(editedTour);
                 id="description"
                 name="description"
                 label="Описание"
-                onChange={descriptionEdited}
+                onChange={changeHandler}
                 InputLabelProps={{
                   shrink: true,
                 }}
-                value={descriptionValue}
+                value={description}
                 fullWidth
               />
             </Grid>
@@ -206,11 +181,11 @@ console.log(editedTour);
                 id="price"
                 name="price"
                 label="Цена"
-                onChange={priceEdited}
+                onChange={changeHandler}
                 InputLabelProps={{
                   shrink: true,
                 }}
-                value={priceValue}
+                value={price}
                 fullWidth
               />
             </Grid>
@@ -220,11 +195,11 @@ console.log(editedTour);
                 id="seats"
                 name="seats"
                 label="Осталось мест"
-                onChange={seatsEdited}
+                onChange={changeHandler}
                 InputLabelProps={{
                   shrink: true,
                 }}
-                value={seatsValue}
+                value={seats}
                 fullWidth
               />
             </Grid>
@@ -255,6 +230,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     fetchEditTour: fetchEditTour(tourService, dispatch),
     fetchTour: fetchTour(tourService, dispatch),
+    fetchTours: fetchTours(tourService, dispatch),
   };
 };
 

@@ -94,6 +94,7 @@ export const fetchLogin = (tourService, dispatch) => (data) => {
       if (data.message === "Auth succesful") {
         dispatch(setUser(data.user));
         localStorage.setItem("token", data.token);
+        localStorage.setItem("user", JSON.stringify(data.user))
         return data.message;
       }
     })

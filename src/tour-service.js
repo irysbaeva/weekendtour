@@ -26,11 +26,13 @@ const tourService = {
   getTour: (id) => axios.get(`tours/${id}`),
   editTour: (id, data) => {
     let token = localStorage.getItem("token");
+    let user = localStorage.getItem("user");
     let config = {
       headers: { Authorization: `Bearer ${token}` },
     };
-    console.log(token);
-    return axios.put(`tours/${id}/edit`, data, config)},
+    console.log(data);
+
+    return axios.put(`tours/${id}/edit`, { user: user, editedTourData: data }, config)},
 
   deleteTour: (id) => {
     let token = localStorage.getItem("token");
