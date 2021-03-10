@@ -107,17 +107,7 @@ const AddTourForm = ({
             onChange={(e) => priceAdded(e.target.value)}
           />
         </Grid>
-        {/* <Grid item xs={12} sm={6}>
-          <TextField
-            required
-            id="companyName"
-            name="companyName"
-            label="Организатор"
-            fullWidth
-            value={userId}
-            // onChange={(e) => companyAdded(e.target.value)}
-          />
-        </Grid> */}
+    
         <Grid item xs={12} sm={6}>
           <TextField
             required

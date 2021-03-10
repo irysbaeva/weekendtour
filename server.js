@@ -101,9 +101,8 @@ app.put("/tours/:id/edit", checkAuth, (req, res) => {
 
 app.post("/tours", checkAuth, upload.single("image"), (req, res) => {
   const path = req.file ? req.file.path : null;
-
   const data = req.body;
-  console.log(data);
+
 
   const tour = new Tour({
     _id: new mongoose.Types.ObjectId(),
@@ -120,13 +119,9 @@ app.post("/tours", checkAuth, upload.single("image"), (req, res) => {
   tour
     .save()
     .then(() => res.status(201).json({ message: "Tour added" }))
-    .catch((err) => {
-      res.status(500).json({ error: err });
+    .catch(() => {
+      res.status(500).json({ message:"Tour is not added" });
     });
-  // .then(() => res.send({ status: "ok" }))
-  // .catch((err) => {
-  //   res.send(err);
-  // });
 });
 
 app.get("/bookings", checkAuth, (req, res) => {
@@ -173,9 +168,7 @@ app.post("/signup", (req, res) => {
       } else {
         bcrypt.hash(req.body.password, 10, (err, hash) => {
           if (err) {
-            return res.status(500).json({
-              error: err,
-            });
+            return res.status(500).json({ message: "message" });
           } else {
             const user = new User({
               _id: new mongoose.Types.ObjectId(),
@@ -197,9 +190,8 @@ app.post("/signup", (req, res) => {
                   user: { userId: result._id, companyName: result.companyName },
                 });
               })
-              .catch((err) => {
-                console.log(err);
-                res.status(501).json({ error: err });
+              .catch(() => {
+                res.status(501).json({ message: "Adding user is failed" });
               });
           }
         });
@@ -235,9 +227,8 @@ app.post("/login", (req, res) => {
         res.status(401).json({ message: "Auth failed" });
       });
     })
-    .catch((err) => {
-      console.log(err);
-      res.status(500).json({ error: err });
+    .catch(() => {
+      res.status(500).json({ message: "Auth failed" });
     });
 });
 

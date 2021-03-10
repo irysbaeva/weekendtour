@@ -73,7 +73,11 @@ const EditTourForm = ({ fetchEditTour, fetchTour,fetchTours }) => {
           company:company._id
         });
       }
-    );
+    )
+    .catch(err=> {
+      console.log(err);
+      
+    });
   }, [fetchTour, id]);
 
   const {

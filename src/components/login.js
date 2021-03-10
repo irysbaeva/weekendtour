@@ -8,15 +8,14 @@ import Link from "@material-ui/core/Link";
 import Grid from "@material-ui/core/Grid";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
-import Snackbar from "@material-ui/core/Snackbar";
-import MuiAlert from "@material-ui/lab/Alert";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import { fetchLogin } from "../redux/actions";
 import { connect } from "react-redux";
 import compose from "../utils/compose";
 import withTourService from "../with-tour-service";
-
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 const useStyles = makeStyles((theme) => ({
   paper: {
     marginTop: theme.spacing(8),
@@ -42,14 +41,6 @@ const Login = (store) => {
   const history = useHistory();
   const [user, setUser] = useState({});
   const { isLoggedin, fetchLogin } = store;
-  const [open, setOpen] = useState(false);
-
-  const handleClick = () => {
-    setOpen(true);
-  };
-  const handleClose = () => {
-    setOpen(false);
-  };
 
   const changeHandler = (event) => {
     setUser({ ...user, [event.target.name]: event.target.value });
@@ -60,7 +51,7 @@ const Login = (store) => {
   };
   return (
     <div>
-      {isLoggedin && redirect() && open}
+      {isLoggedin && redirect()}
 
       <Container component="main" maxWidth="xs">
         <CssBaseline />
@@ -108,26 +99,18 @@ const Login = (store) => {
               className={classes.submit}
               onClick={(event) => {
                 event.preventDefault();
-                fetchLogin(user).then((data) => {
-                  console.log(`then${data}`);
-                  if (data !== "Auth succesful") {
-                    handleClick();
-                  }
-                });
+                fetchLogin(user)
+                  .then((message) => {
+                    console.log(`then${message}`);
+                  })
+                  .catch((err) => {
+                    console.log(err);
+                  });
               }}
+              
             >
               Войти
             </Button>
-            <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
-              <MuiAlert
-                elevation={6}
-                variant="filled"
-                severity="error"
-                onClose={handleClose}
-              >
-                Неверный логин или пароль!
-              </MuiAlert>
-            </Snackbar>
             <Grid container>
               <Grid item>
                 <Link href="/signup" variant="body2">

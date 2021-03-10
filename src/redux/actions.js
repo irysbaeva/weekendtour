@@ -49,8 +49,9 @@ export const fetchNewTour = (tourService, dispatch) => (data) => {
     .then(({ data }) => {
       console.log(data.message);
       dispatch(clearNewTourInfo());
+      return data
     })
-    .catch((err) => console.log(err));
+    // .catch((err) => console.log(err));
 };
 
 export const fetchEditTour = (tourService, dispatch) => (id, data) => {
@@ -82,15 +83,15 @@ export const fetchNewUser = (tourService, dispatch) => (data) => {
         return data.message;
       }
     })
-    .catch((err) => {console.log(err); return err});
+    // .catch((err) => {console.log(err); return err});
 };
 
 export const fetchLogin = (tourService, dispatch) => (data) => {
   return tourService
     .login(data)
-    .then(({ data }) => {
-     
-      
+    .then(({ data} ) => {
+     console.log(data);
+
       if (data.message === "Auth succesful") {
         dispatch(setUser(data.user));
         localStorage.setItem("token", data.token);
@@ -98,9 +99,11 @@ export const fetchLogin = (tourService, dispatch) => (data) => {
         return data.message;
       }
     })
-    .catch((err) => {
-      return err;
-    });
+    // .catch((err) => {
+    //   console.log(err);
+      
+    //   return err;
+    // });
 };
 
 export const addTourToBook = (e) => ({ type: "ADD_TOUR_TO_BOOK", payload: e });

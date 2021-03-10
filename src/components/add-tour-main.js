@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Paper from "@material-ui/core/Paper";
@@ -72,7 +72,7 @@ function AddTour({ newTour, fetchNewTour, currentUser, fetchTours }) {
   const handleBack = () => {
     setActiveStep(activeStep - 1);
   };
- 
+
   return (
     <React.Fragment>
       <CssBaseline />
@@ -109,8 +109,13 @@ function AddTour({ newTour, fetchNewTour, currentUser, fetchTours }) {
                     color="primary"
                     onClick={async () => {
                       handleNext();
-                      if (activeStep === steps.length - 1  ) {
-                        await fetchNewTour({ ...newTour, company: currentUser.userId});
+                      if (activeStep === steps.length - 1) {
+                        await fetchNewTour({
+                          ...newTour,
+                          company: currentUser.userId,
+                        }).then((data) =>
+                          console.log(data).catch((err) => console.log(err))
+                        );
                       }
                     }}
                     className={classes.button}

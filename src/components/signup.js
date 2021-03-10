@@ -111,7 +111,9 @@ const SignUp = (store) => {
               className={classes.submit}
               onClick={(e) => {
                 e.preventDefault();
-                fetchNewUser(newUser);
+                fetchNewUser(newUser).catch((err) => {
+                  console.log(err);
+                });;
               }}
             >
               Зарегистрироваться
