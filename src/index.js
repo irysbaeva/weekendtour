@@ -1,12 +1,26 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import App from './App';
-
+import React from "react";
+import ReactDOM from "react-dom";
+import { BrowserRouter as Router } from "react-router-dom";
+import { Provider } from "react-redux";
+import tourService from "./tour-service";
+import { TourServiceProvider } from "./tour-service-context";
+import App from "./components/App";
+import ErrorBoundry from "./components/error-boundry";
+import store from "./store";
+import { ToastContainer } from "react-toastify";
 
 ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-  document.getElementById('root')
+  // <React.StrictMode>
+  <Provider store={store}>
+    <ErrorBoundry>
+      <TourServiceProvider value={tourService}>
+        <Router>
+          <ToastContainer />
+          <App />
+        </Router>
+      </TourServiceProvider>
+    </ErrorBoundry>
+  </Provider>,
+  /* </React.StrictMode> */
+  document.getElementById("root")
 );
-
