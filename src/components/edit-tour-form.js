@@ -57,6 +57,23 @@ const EditTourForm = ({ fetchEditTour, fetchTour }) => {
   const { id } = useParams();
   const history = useHistory();
   const [editedTour, setEditedTour] = useState({});
+ const {
+   title,
+   startDate,
+   endDate,
+   description,
+   includes,
+   price,
+   seats,
+ } = editedTour;
+ const isSaveButtonDisabled =
+   !title ||
+   !startDate ||
+   !endDate ||
+   !description ||
+   !price ||
+   !includes ||
+   !seats;
 
   useEffect(() => {
     fetchTour(id)
@@ -89,24 +106,7 @@ const EditTourForm = ({ fetchEditTour, fetchTour }) => {
       });
   }, [fetchTour, id]);
 
-  const {
-    title,
-    startDate,
-    endDate,
-    description,
-    includes,
-    price,
-    seats,
-  } = editedTour;
-  const isSaveButtonDisabled =
-    !title ||
-    !startDate ||
-    !endDate ||
-    !description ||
-    !price ||
-    !includes ||
-    !seats;
-
+ 
   const changeHandler = (e) => {
     setEditedTour({ ...editedTour, [e.target.name]: e.target.value });
   };
