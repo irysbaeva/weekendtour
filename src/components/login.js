@@ -14,8 +14,7 @@ import { fetchLogin } from "../redux/actions";
 import { connect } from "react-redux";
 import compose from "../utils/compose";
 import withTourService from "../with-tour-service";
-import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+
 const useStyles = makeStyles((theme) => ({
   paper: {
     marginTop: theme.spacing(8),
@@ -40,8 +39,8 @@ const Login = (store) => {
   const classes = useStyles();
   const history = useHistory();
   const [user, setUser] = useState({});
-  const { isLoggedin, fetchLogin } = store;
-
+  const { fetchLogin } = store;
+  const isLoginButtonDisabled = !user.email|| !user.password; 
   const changeHandler = (event) => {
     setUser({ ...user, [event.target.name]: event.target.value });
   };
@@ -51,8 +50,6 @@ const Login = (store) => {
   };
   return (
     <div>
-      {isLoggedin && redirect()}
-
       <Container component="main" maxWidth="xs">
         <CssBaseline />
         <div className={classes.paper}>
@@ -97,17 +94,13 @@ const Login = (store) => {
               variant="contained"
               color="primary"
               className={classes.submit}
+              disabled={isLoginButtonDisabled}
               onClick={(event) => {
                 event.preventDefault();
-                fetchLogin(user)
-                  .then((message) => {
-                    console.log(`then${message}`);
-                  })
-                  .catch((err) => {
-                    console.log(err);
-                  });
+                fetchLogin(user).then(() => {
+                  redirect();
+                });
               }}
-              
             >
               Войти
             </Button>

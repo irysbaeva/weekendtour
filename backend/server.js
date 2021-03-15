@@ -66,9 +66,9 @@ app.delete("/tours/:id", checkAuth, (req, res) => {
   Tour.deleteOne({ _id: id }).then((tour) => {
     if (tour) {
       console.log(`requserdatauserid${req.userData.userId}`);
-       res.status(200).json({ message: "deleted" });
+      res.status(200).json({ message: "deleted" });
     } else {
-       res.status(501).json({ message: "error" });
+      res.status(501).json({ message: "error" });
     }
   });
 });
@@ -102,7 +102,6 @@ app.post("/tours", checkAuth, upload.single("image"), (req, res) => {
   const path = req.file ? req.file.path : null;
   const data = req.body;
 
-
   const tour = new Tour({
     _id: new mongoose.Types.ObjectId(),
     title: data.title,
@@ -119,7 +118,7 @@ app.post("/tours", checkAuth, upload.single("image"), (req, res) => {
     .save()
     .then(() => res.status(201).json({ message: "Tour added" }))
     .catch(() => {
-      res.status(500).json({ message:"Не удалось добавить" });
+      res.status(500).json({ message: "Не удалось добавить" });
     });
 });
 

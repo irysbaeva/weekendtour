@@ -27,7 +27,15 @@ const AddTourForm = ({
   seatsAdded,
   newTour,
 }) => {
- 
+ const {
+  title,
+  startDate,
+  endDate,
+  description,
+  includes,
+  price,
+  seats
+} = newTour;
 
   return (
     <React.Fragment>
@@ -41,6 +49,7 @@ const AddTourForm = ({
             id="title"
             name="title"
             label="Маршрут"
+            value={title}
             fullWidth
             onChange={(e) => {
               titleAdded(e.target.value);
@@ -54,6 +63,8 @@ const AddTourForm = ({
             name="startDate"
             label="Дата начала"
             type="date"
+           
+                value={startDate}
             InputLabelProps={{
               shrink: true,
             }}
@@ -70,6 +81,7 @@ const AddTourForm = ({
             name="endDate"
             label="Дата окончания"
             type="date"
+            value={endDate}
             InputLabelProps={{
               shrink: true,
             }}
@@ -82,6 +94,7 @@ const AddTourForm = ({
             id="description"
             name="description"
             label="Описание тура"
+            value={description}
             fullWidth
             onChange={(e) => descriptionAdded(e.target.value)}
           />
@@ -92,6 +105,7 @@ const AddTourForm = ({
             id="includes"
             name="includes"
             label="В стоимость включено"
+            value={includes}
             fullWidth
             onChange={(e) => includesAdded(e.target.value)}
           />
@@ -103,6 +117,7 @@ const AddTourForm = ({
             id="price"
             name="price"
             label="Стоимость"
+            value={price}
             fullWidth
             onChange={(e) => priceAdded(e.target.value)}
           />
@@ -114,6 +129,7 @@ const AddTourForm = ({
             id="seats"
             name="seats"
             label="Количество мест"
+            value={seats}
             fullWidth
             onChange={(e) => seatsAdded(e.target.value)}
           />
@@ -131,7 +147,7 @@ const AddTourForm = ({
 };
 
 const mapStateToProps = ({ newTour }) => {
-  return newTour;
+  return {newTour};
 };
 
 const mapDispatchToProps = {

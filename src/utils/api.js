@@ -1,7 +1,7 @@
 import axios from "axios";
 import { toast } from "react-toastify";
 import { options } from "../utils/constants";
-import "react-toastify/dist/ReactToastify.css"
+import "react-toastify/dist/ReactToastify.css";
 const customInstance = axios.create({
   baseURL: options[process.env.NODE_ENV].baseURL,
   headers: { Accept: "application/json" },
@@ -39,38 +39,25 @@ customInstance.interceptors.response.use(
 
     if (status === 409) {
       toast.error(data?.message);
-      console.log(data?.message);
+      // console.log(data?.message);
 
       return Promise.reject(new Error(data?.message));
     }
 
     if (status === 500) {
-      const messageFromServer = data?.message;
-      const errorObject = {
-        message: `Uncaught error - ${status}. ${
-          messageFromServer && messageFromServer
-        }`,
-        code: 1,
-      };
-
-      toast.error(errorObject.message);
-
-      return Promise.reject(new Error(errorObject.message));
+   
+        toast.error(data?.message);
+        return Promise.reject(new Error(data?.message));
+  
     }
     if (status === 501) {
-      const messageFromServer = data?.message;
-
-      const errorObject = {
-        message: `Not Implemented  - ${status}. ${messageFromServer}`,
-        code: 1,
-      };
-
-      toast.error(errorObject.message);
-      return Promise.reject(new Error(errorObject.message));
-    }
-
-    return Promise.reject(error.response && error.response.data);
+      toast.error(data?.message);
+      return Promise.reject(new Error(data?.message));}
+  
+    toast.error(data?.message);
+    return Promise.reject(`test${error.response && error.response.data}`);
   }
 );
+  
 
 export default customInstance;

@@ -52,32 +52,41 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const EditTourForm = ({ fetchEditTour, fetchTour,fetchTours }) => {
+const EditTourForm = ({ fetchEditTour, fetchTour }) => {
   const classes = useStyles();
-  let { id } = useParams();
+  const { id } = useParams();
   const history = useHistory();
-
   const [editedTour, setEditedTour] = useState({});
 
   useEffect(() => {
-    fetchTour(id).then(
-      ({ title, startDate, endDate, description, includes, price, seats,company }) => {
-        setEditedTour({
-          title: title,
-          startDate: moment(startDate, "DD.MM.YYYY").format("YYYY-MM-DD"),
-          endDate: moment(endDate, "DD.MM.YYYY").format("YYYY-MM-DD"),
-          description: description,
-          includes: includes,
-          price: price,
-          seats: seats,
-          company:company._id
-        });
-      }
-    )
-    .catch(err=> {
-      console.log(err);
-      
-    });
+    fetchTour(id)
+      .then(
+        ({
+          title,
+          startDate,
+          endDate,
+          description,
+          includes,
+          price,
+          seats,
+          company,
+        }) => {
+          setEditedTour({
+            title: title,
+            startDate: moment(startDate, "DD.MM.YYYY").format("YYYY-MM-DD"),
+            endDate: moment(endDate, "DD.MM.YYYY").format("YYYY-MM-DD"),
+            description: description,
+            includes: includes,
+            price: price,
+            seats: seats,
+            company: company._id,
+          });
+        }
+      )
+      .catch((err) => {
+        console.log(err);
+       redirect(id)
+      });
   }, [fetchTour, id]);
 
   const {
@@ -87,10 +96,16 @@ const EditTourForm = ({ fetchEditTour, fetchTour,fetchTours }) => {
     description,
     includes,
     price,
-    seats
+    seats,
   } = editedTour;
-
-  console.log(editedTour);
+  const isSaveButtonDisabled =
+    !title ||
+    !startDate ||
+    !endDate ||
+    !description ||
+    !price ||
+    !includes ||
+    !seats;
 
   const changeHandler = (e) => {
     setEditedTour({ ...editedTour, [e.target.name]: e.target.value });
@@ -215,6 +230,7 @@ const EditTourForm = ({ fetchEditTour, fetchTour,fetchTours }) => {
                 redirect(id);
               }}
               className={classes.button}
+              disabled={isSaveButtonDisabled}
             >
               Сохранить
             </Button>

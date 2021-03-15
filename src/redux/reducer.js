@@ -51,6 +51,7 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         newTour: { ...state.newTour, title: action.payload },
+       
       };
     case "ADD_START_DATE":
       return {
@@ -104,7 +105,8 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         isLoggedin: false,
-        currentUser: {}
+        currentUser: {},
+        newTour: {}
       };
     case "ADD_TOUR_TO_BOOK":
       return {

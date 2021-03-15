@@ -29,17 +29,25 @@ export const fetchTours = (tourService, dispatch) => () => {
   dispatch(toursRequested());
   tourService
     .getTours()
-    .then(({ data }) => {
+    .then(( {data} ) => {
       dispatch(toursLoaded(data.map(transformTour)));
     })
-    .catch((err) => dispatch(toursError(err)));
+     .catch((err) => 
+    {
+      dispatch(toursError(err));
+     return Promise.reject(new Error(err));
+    });
+
 };
 
 export const fetchTour = (tourService, dispatch) => (id) => {
   return tourService
     .getTour(id)
     .then(({ data }) => transformTour(data))
-    .catch((err) => dispatch(toursError(err)));
+    .catch((err) => 
+    {
+      dispatch(toursError(err));
+     return Promise.reject(new Error(err));});
 };
 const clearNewTourInfo = () => ({ type: "CLEAR_NEW_TOUR_INFO" });
 
@@ -47,11 +55,12 @@ export const fetchNewTour = (tourService, dispatch) => (data) => {
   tourService
     .addTour(data)
     .then(({ data }) => {
-      console.log(data.message);
       dispatch(clearNewTourInfo());
-      return data
+      return data;
     })
-    // .catch((err) => console.log(err));
+    .catch((err) => {
+      return Promise.reject(new Error(err));
+    });
 };
 
 export const fetchEditTour = (tourService, dispatch) => (id, data) => {
@@ -74,36 +83,31 @@ export const fetchNewUser = (tourService, dispatch) => (data) => {
   return tourService
     .addUser(data)
     .then(({ data }) => {
-      console.log(data);
       if (data.message === "User created") {
-        console.log(data.user);
-
         dispatch(setUser(data.user));
         localStorage.setItem("token", data.token);
         return data.message;
       }
     })
-    // .catch((err) => {console.log(err); return err});
+    .catch((err) => {
+      return Promise.reject(new Error(err));
+    });
 };
 
 export const fetchLogin = (tourService, dispatch) => (data) => {
   return tourService
     .login(data)
-    .then(({ data} ) => {
-     console.log(data);
-
+    .then(({ data }) => {
       if (data.message === "Auth succesful") {
         dispatch(setUser(data.user));
         localStorage.setItem("token", data.token);
-        localStorage.setItem("user", JSON.stringify(data.user))
+        localStorage.setItem("user", JSON.stringify(data.user));
         return data.message;
       }
     })
-    // .catch((err) => {
-    //   console.log(err);
-      
-    //   return err;
-    // });
+    .catch((err) => {
+      return Promise.reject(new Error(err));
+    });
 };
 
 export const addTourToBook = (e) => ({ type: "ADD_TOUR_TO_BOOK", payload: e });
@@ -126,7 +130,11 @@ export const fetchBookings = (tourService, dispatch) => () => {
     .then(({ data }) => {
       dispatch(bookingsLoaded(data.map(transformBooking)));
     })
-    .catch((err) => dispatch(toursError(err)));
+  
+    .catch((err) => {
+       dispatch(toursError(err));
+      return Promise.reject(new Error(err));
+    });
 };
 
 export const fetchNewBooking = (tourService, dispatch) => (data) => {
@@ -135,5 +143,6 @@ export const fetchNewBooking = (tourService, dispatch) => (data) => {
     .then(() => {
       dispatch(clearBookingInfo());
     })
-    .catch((err) => console.log(err));
+    .catch((err) => {console.log(err);
+     return Promise.reject(new Error(err));});
 };

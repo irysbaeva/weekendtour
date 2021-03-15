@@ -41,6 +41,7 @@ const SignUp = (store) => {
   const [newUser, setNewUser] = useState({});
 
   const { isLoggedin, fetchNewUser } = store;
+  const isSignupButtonDisabled = !newUser.email || !newUser.password || !newUser.companyName; 
   const changeHandler = (event) => {
     setNewUser({ ...newUser, [event.target.name]: event.target.value });
   };
@@ -109,11 +110,12 @@ const SignUp = (store) => {
               variant="contained"
               color="primary"
               className={classes.submit}
+              disabled={isSignupButtonDisabled}
               onClick={(e) => {
                 e.preventDefault();
                 fetchNewUser(newUser).catch((err) => {
                   console.log(err);
-                });;
+                });
               }}
             >
               Зарегистрироваться

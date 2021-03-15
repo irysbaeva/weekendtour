@@ -64,6 +64,10 @@ function getStepContent(step) {
 function AddTour({ newTour, fetchNewTour, currentUser, fetchTours }) {
   const classes = useStyles();
   const [activeStep, setActiveStep] = useState(0);
+  const isNextButtonDisabled = !newTour.title || !newTour.startDate || !newTour.endDate 
+    || !newTour.description || !newTour.price || !newTour.includes 
+    || !newTour.seats || !newTour.image
+
 
   const handleNext = () => {
     setActiveStep(activeStep + 1);
@@ -107,18 +111,20 @@ function AddTour({ newTour, fetchNewTour, currentUser, fetchTours }) {
                   <Button
                     variant="contained"
                     color="primary"
-                    onClick={async () => {
+                    onClick={() => {
                       handleNext();
                       if (activeStep === steps.length - 1) {
-                        await fetchNewTour({
+                       fetchNewTour({
                           ...newTour,
                           company: currentUser.userId,
-                        }).then((data) =>
-                          console.log(data).catch((err) => console.log(err))
-                        );
+                        })
+                        // .then((data) =>
+                        //   console.log(data))
+                          // .catch((err) => console.log(err))
+                       
                       }
                     }}
-                    className={classes.button}
+                    className={classes.button} disabled={isNextButtonDisabled}
                   >
                     {activeStep === steps.length - 1 ? "Добавить тур" : "Далее"}
                   </Button>
