@@ -16,7 +16,8 @@ import ListItemText from "@material-ui/core/ListItemText";
 
 import MenuItem from "@material-ui/core/MenuItem";
 
-import { fetchNewBooking} from "../redux/actions";
+import { fetchNewBooking } from "../redux/actions";
+
 
 const useStyles = makeStyles((theme) => ({
   appBar: {
@@ -57,6 +58,11 @@ const useStyles = makeStyles((theme) => ({
     fontSize: "10px",
     padding: theme.spacing(0),
   },
+  notice: {
+    fontSize: "10px",
+    marginTop: theme.spacing(3),
+    marginLeft: theme.spacing(1),
+  },
 }));
 
 const BookTourForm = (store) => {
@@ -64,11 +70,12 @@ const BookTourForm = (store) => {
   const history = useHistory();
   const { fetchNewBooking, newBooking, tours } = store;
 
-  const [booking, setBooking] = useState({});
-
-  let tour = tours.find((tour) => tour.id === newBooking.tour);
+  const [booking, setBooking] = useState({ tour: newBooking.tour });
+  const tour = tours.find((tour) => tour.id === newBooking.tour);
   const [selectedTour, setSelectedTour] = useState(tour);
-  console.log(tour);
+  const { firstName, lastName, seats, phone, email } = booking;
+  const isBookButtonDisabled =
+    !firstName || !lastName || !seats || !phone || !email;
 
   const onChangeTour = (event) => {
     const changedTour = tours.find((tour) => tour.title === event.target.value);
@@ -90,6 +97,7 @@ const BookTourForm = (store) => {
         includes,
         price,
         company,
+        seats,
       } = selectedTour;
       return (tourInfo = [
         {
@@ -113,6 +121,7 @@ const BookTourForm = (store) => {
           primary: "Организатор",
           secondary: company ? company.companyName : null,
         },
+        { primary: "Осталось мест", secondary: seats },
       ]);
     }
   };
@@ -213,7 +222,6 @@ const BookTourForm = (store) => {
                 required
                 // id={"seats"}
                 name={"seats"}
-                // label={"seats"}
                 id="select"
                 label={"Выбрать количество мест"}
                 defaultValue=""
@@ -221,16 +229,19 @@ const BookTourForm = (store) => {
                 fullWidth
                 onChange={changeHandler}
               >
-                {[1, 2, 3, 4, 5, 6].map((el) => (
-                  <MenuItem key={`selected${el}`} value={el}>
-                    {el}
-                  </MenuItem>
-                ))}{" "}
+                {[1, 2, 3, 4, 5, 6, 7, 8]
+                  .filter((el) => el <= selectedTour.seats)
+                  .map((el) => (
+                    <MenuItem key={`seats${el}`} value={el}>
+                      {el}
+                    </MenuItem>
+                  ))}
               </TextField>
             </Grid>
             <Button
               variant="contained"
               color="primary"
+              disabled={isBookButtonDisabled}
               onClick={() => {
                 fetchNewBooking(booking);
                 history.push("/");
@@ -239,7 +250,9 @@ const BookTourForm = (store) => {
             >
               Забронировать
             </Button>
+
           </Grid>
+            <Typography className={classes.notice}>Стоимость, указанная на сайте не действительна для групп более 10 человек. По всем групповым заявкам просим присылать запросы на mice@weekend.ru</Typography>
         </Paper>
       </main>
     </React.Fragment>

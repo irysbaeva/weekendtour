@@ -29,25 +29,23 @@ export const fetchTours = (tourService, dispatch) => () => {
   dispatch(toursRequested());
   tourService
     .getTours()
-    .then(( {data} ) => {
+    .then(({ data }) => {
       dispatch(toursLoaded(data.map(transformTour)));
     })
-     .catch((err) => 
-    {
+    .catch((err) => {
       dispatch(toursError(err));
-     return Promise.reject(new Error(err));
+      return Promise.reject(new Error(err));
     });
-
 };
 
 export const fetchTour = (tourService, dispatch) => (id) => {
   return tourService
     .getTour(id)
     .then(({ data }) => transformTour(data))
-    .catch((err) => 
-    {
+    .catch((err) => {
       dispatch(toursError(err));
-     return Promise.reject(new Error(err));});
+      return Promise.reject(new Error(err));
+    });
 };
 const clearNewTourInfo = () => ({ type: "CLEAR_NEW_TOUR_INFO" });
 
@@ -130,9 +128,9 @@ export const fetchBookings = (tourService, dispatch) => () => {
     .then(({ data }) => {
       dispatch(bookingsLoaded(data.map(transformBooking)));
     })
-  
+
     .catch((err) => {
-       dispatch(toursError(err));
+      dispatch(toursError(err));
       return Promise.reject(new Error(err));
     });
 };
@@ -143,6 +141,8 @@ export const fetchNewBooking = (tourService, dispatch) => (data) => {
     .then(() => {
       dispatch(clearBookingInfo());
     })
-    .catch((err) => {console.log(err);
-     return Promise.reject(new Error(err));});
+    .catch((err) => {
+      console.log(err);
+      return Promise.reject(new Error(err));
+    });
 };

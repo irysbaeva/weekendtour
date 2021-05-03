@@ -24,12 +24,13 @@ customInstance.interceptors.request.use((conf) => {
 
 customInstance.interceptors.response.use(
   (response) => {
+    toast.success(response.data.message)
     console.log(response);
     return response;
   },
   (error) => {
     const { status, data } = error.response;
-    console.log(error.response);
+    // console.log(error.response);
 
     if (status === 401) {
       toast.error(data?.message);

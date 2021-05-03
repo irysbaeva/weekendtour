@@ -101,7 +101,6 @@ const EditTourForm = ({ fetchEditTour, fetchTour }) => {
         }
       )
       .catch((err) => {
-        console.log(err);
        redirect(id)
       });
   }, [fetchTour, id]);

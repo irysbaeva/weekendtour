@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-mongoose.connect("mongodb://localhost/tours");
+// mongoose.connect("mongodb://localhost/tours");
 const Booking = mongoose.model("Booking", {
   _id: mongoose.Schema.Types.ObjectId,
   firstName: { type: String, required: true },

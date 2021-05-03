@@ -9,11 +9,17 @@ const multer = require("multer");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const app = express();
+const PORT = process.env.PORT || 5000;
 const checkAuth = require("./check-auth");
+
 
 app.use("/uploads", express.static("uploads"));
 
-mongoose.connect("mongodb://localhost/tours", {
+mongoose.connect(
+  // process.env.MONGODB_URI || 
+  "mongodb+srv://irysya:sEX3ib8taYWQO8zH@cluster0.is0gy.mongodb.net/weekendtour?retryWrites=true&w=majority"
+  // "mongodb://localhost/tours"
+  , {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
@@ -66,7 +72,7 @@ app.delete("/tours/:id", checkAuth, (req, res) => {
   Tour.deleteOne({ _id: id }).then((tour) => {
     if (tour) {
       console.log(`requserdatauserid${req.userData.userId}`);
-      res.status(200).json({ message: "deleted" });
+      res.status(200).json({ message: "Тур удален" });
     } else {
       res.status(501).json({ message: "error" });
     }
@@ -139,6 +145,7 @@ app.get("/bookings", checkAuth, (req, res) => {
 
 app.post("/bookings", (req, res) => {
   const data = req.body;
+  console.log(data.seats);
 
   const booking = new Booking({
     _id: new mongoose.Types.ObjectId(),
@@ -152,7 +159,19 @@ app.post("/bookings", (req, res) => {
   });
   booking
     .save()
-    .then(() => res.status(201).json({ message: "Booking created" }))
+    .then(() => {
+      Tour.findById(data.tour, (err, tour) => {
+        if (err) {
+          res.status(500).json({ message: "error" });
+        }
+        console.log(tour.seats);
+        tour.seats = tour.seats - data.seats;
+        tour.save();
+      });
+
+      res.status(201).json({ message: "Тур забронирован" });
+    })
+
     .catch(() => {
       res.status(500).json({ message: "error" });
     });
@@ -231,6 +250,10 @@ app.post("/login", (req, res) => {
     });
 });
 
-app.listen(5000, () => {
+if(process.env.NODE_ENV ==="production") {
+  app.use(express.static("client/build"))
+}
+
+app.listen(PORT, () => {
   console.log("server is running");
 });

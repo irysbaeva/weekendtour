@@ -46,7 +46,8 @@
     "yup": "^0.32.9"
   },
   "scripts": {
-    "start": "npm-run-all --parallel start-react server-dev",
+  
+     "start": "npm-run-all --parallel start-react server-dev",
     "start-react": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
