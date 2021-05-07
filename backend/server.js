@@ -16,7 +16,7 @@ const checkAuth = require("./check-auth");
 app.use("/uploads", express.static("uploads"));
 
 mongoose.connect(
-  // process.env.MONGODB_URI || 
+  process.env.MONGODB_URI || 
   "mongodb+srv://irysya:sEX3ib8taYWQO8zH@cluster0.is0gy.mongodb.net/weekendtour?retryWrites=true&w=majority"
   // "mongodb://localhost/tours"
   , {
