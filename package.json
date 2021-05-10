@@ -15,12 +15,12 @@
     "path": "^0.12.7"
   },
   "scripts": {
-    "start": "nodemon server.js",
+    "start": "node server.js",
     "build": "cd client && npm run build",
     "install-client": "cd client && npm install",
     "heroku-postbuild": "npm run install-client && npm run build",
     "server": "node server.js",
-    "client":"cd client && npm start"
+    "client": "cd client && npm start"
   },
   "eslintConfig": {
     "extends": [
