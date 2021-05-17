@@ -4,8 +4,6 @@ import Button from "@material-ui/core/Button";
 import { fetchTour } from "../redux/actions";
 import { connect } from "react-redux";
 import { useHistory } from "react-router-dom";
-import compose from "../utils/compose";
-import withTourService from "../with-tour-service";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import List from "@material-ui/core/List";
@@ -147,18 +145,11 @@ const TourDescription = ({ fetchTour, currentUser }) => {
   );
 };
 
-const mapStateToProps = (store) => {
-  return store;
+const mapStateToProps = ({currentUser}) => {
+  return {currentUser};
 };
 
-const mapDispatchToProps = (dispatch, ownProps) => {
-  const { tourService } = ownProps;
-  return {
-    fetchTour: fetchTour(tourService, dispatch),
-  };
-};
 
-export default compose(
-  withTourService(),
-  connect(mapStateToProps, mapDispatchToProps)
+export default 
+  connect(mapStateToProps, {fetchTour}
 )(TourDescription);

@@ -1,7 +1,5 @@
 const mongoose = require("mongoose");
 
-
-// mongoose.connect("mongodb://localhost/tours");
 const User = mongoose.model("User", {
   _id: mongoose.Schema.Types.ObjectId,
   email: {

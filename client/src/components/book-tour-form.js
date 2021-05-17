@@ -7,8 +7,6 @@ import { connect } from "react-redux";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import { makeStyles } from "@material-ui/core/styles";
-import compose from "../utils/compose";
-import withTourService from "../with-tour-service";
 import Paper from "@material-ui/core/Paper";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
@@ -17,7 +15,6 @@ import ListItemText from "@material-ui/core/ListItemText";
 import MenuItem from "@material-ui/core/MenuItem";
 
 import { fetchNewBooking } from "../redux/actions";
-
 
 const useStyles = makeStyles((theme) => ({
   appBar: {
@@ -230,7 +227,7 @@ const BookTourForm = (store) => {
                 onChange={changeHandler}
               >
                 {[1, 2, 3, 4, 5, 6, 7, 8]
-                  .filter((el) => el <= selectedTour.seats)
+                  .filter((el) => el <= selectedTour?.seats)
                   .map((el) => (
                     <MenuItem key={`seats${el}`} value={el}>
                       {el}
@@ -250,27 +247,20 @@ const BookTourForm = (store) => {
             >
               Забронировать
             </Button>
-
           </Grid>
-            <Typography className={classes.notice}>Стоимость, указанная на сайте не действительна для групп более 10 человек. По всем групповым заявкам просим присылать запросы на mice@weekend.ru</Typography>
+          <Typography className={classes.notice}>
+            Стоимость, указанная на сайте не действительна для групп более 10
+            человек. По всем групповым заявкам просим присылать запросы на
+            mice@weekend.ru
+          </Typography>
         </Paper>
       </main>
     </React.Fragment>
   );
 };
 
-const mapStateToProps = (store) => {
-  return store;
+const mapStateToProps = ({ newBooking, tours }) => {
+  return { newBooking, tours };
 };
 
-const mapDispatchToProps = (dispatch, ownProps) => {
-  const { tourService } = ownProps;
-  return {
-    fetchNewBooking: fetchNewBooking(tourService, dispatch),
-  };
-};
-
-export default compose(
-  withTourService(),
-  connect(mapStateToProps, mapDispatchToProps)
-)(BookTourForm);
+export default connect(mapStateToProps, { fetchNewBooking })(BookTourForm);

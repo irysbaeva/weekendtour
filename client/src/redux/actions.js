@@ -1,4 +1,5 @@
 import transformTour from "../utils/transformTour";
+import tourService from "../tour-service";
 
 export const titleAdded = (e) => ({ type: "ADD_TITLE", payload: e });
 export const startDateAdded = (e) => ({ type: "ADD_START_DATE", payload: e });
@@ -25,7 +26,7 @@ const toursError = (error) => {
   return { type: "FETCH_TOURS_FAILURE", payload: error };
 };
 
-export const fetchTours = (tourService, dispatch) => () => {
+export const fetchTours = () => (dispatch) => {
   dispatch(toursRequested());
   tourService
     .getTours()
@@ -38,7 +39,7 @@ export const fetchTours = (tourService, dispatch) => () => {
     });
 };
 
-export const fetchTour = (tourService, dispatch) => (id) => {
+export const fetchTour = (id) => (dispatch) => {
   return tourService
     .getTour(id)
     .then(({ data }) => transformTour(data))
@@ -49,7 +50,7 @@ export const fetchTour = (tourService, dispatch) => (id) => {
 };
 const clearNewTourInfo = () => ({ type: "CLEAR_NEW_TOUR_INFO" });
 
-export const fetchNewTour = (tourService, dispatch) => (data) => {
+export const fetchNewTour = (data) => (dispatch) => {
   tourService
     .addTour(data)
     .then(({ data }) => {
@@ -61,7 +62,7 @@ export const fetchNewTour = (tourService, dispatch) => (data) => {
     });
 };
 
-export const fetchEditTour = (tourService, dispatch) => (id, data) => {
+export const fetchEditTour = (id,data) => (dispatch) => {
   tourService.editTour(id, data);
   // .then(dispatch(toursRequested()))
   // .then(data=>console.log(data)
@@ -77,7 +78,7 @@ export const logoutUser = () => {
   return { type: "LOGOUT_USER" };
 };
 
-export const fetchNewUser = (tourService, dispatch) => (data) => {
+export const fetchNewUser = (data) => (dispatch) => {
   return tourService
     .addUser(data)
     .then(({ data }) => {
@@ -92,7 +93,7 @@ export const fetchNewUser = (tourService, dispatch) => (data) => {
     });
 };
 
-export const fetchLogin = (tourService, dispatch) => (data) => {
+export const fetchLogin = (data) => (dispatch) => {
   return tourService
     .login(data)
     .then(({ data }) => {
@@ -122,7 +123,7 @@ const transformBooking = (booking) => {
     tour: booking.tour ? booking.tour.title : "Тур отменен",
   };
 };
-export const fetchBookings = (tourService, dispatch) => () => {
+export const fetchBookings = () => (dispatch) => {
   tourService
     .getBookings()
     .then(({ data }) => {
@@ -135,7 +136,7 @@ export const fetchBookings = (tourService, dispatch) => () => {
     });
 };
 
-export const fetchNewBooking = (tourService, dispatch) => (data) => {
+export const fetchNewBooking = (data) => (dispatch) => {
   tourService
     .addBooking(data)
     .then(() => {

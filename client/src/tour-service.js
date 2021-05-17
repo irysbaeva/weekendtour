@@ -1,6 +1,6 @@
 import customInstance from "./utils/api";
 
-// console.log(process.env.NODE_ENV);
+console.log(process.env.NODE_ENV);
 const tourService = {
   getTours: () => customInstance.get("tours"),
   addTour: (data) => {

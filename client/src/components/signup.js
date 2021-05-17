@@ -12,8 +12,6 @@ import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import { fetchNewUser } from "../redux/actions";
 import { connect } from "react-redux";
-import compose from "../utils/compose";
-import withTourService from "../with-tour-service";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -41,7 +39,8 @@ const SignUp = (store) => {
   const [newUser, setNewUser] = useState({});
 
   const { isLoggedin, fetchNewUser } = store;
-  const isSignupButtonDisabled = !newUser.email || !newUser.password || !newUser.companyName; 
+  const isSignupButtonDisabled =
+    !newUser.email || !newUser.password || !newUser.companyName;
   const changeHandler = (event) => {
     setNewUser({ ...newUser, [event.target.name]: event.target.value });
   };
@@ -134,18 +133,8 @@ const SignUp = (store) => {
   );
 };
 
-const mapStateToProps = (store) => {
-  return { isLoggedin: store.isLoggedin };
+const mapStateToProps = ({isLoggedin}) => {
+  return { isLoggedin };
 };
 
-const mapDispatchToProps = (dispatch, ownProps) => {
-  const { tourService } = ownProps;
-  return {
-    fetchNewUser: fetchNewUser(tourService, dispatch),
-  };
-};
-
-export default compose(
-  withTourService(),
-  connect(mapStateToProps, mapDispatchToProps)
-)(SignUp);
+export default connect(mapStateToProps, { fetchNewUser })(SignUp);

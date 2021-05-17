@@ -150,7 +150,8 @@ const mapStateToProps = ({ newTour }) => {
   return {newTour};
 };
 
-const mapDispatchToProps = {
+
+export default connect(mapStateToProps, {
   titleAdded,
   startDateAdded,
   endDateAdded,
@@ -159,5 +160,4 @@ const mapDispatchToProps = {
   includesAdded,
   companyAdded,
   seatsAdded,
-};
-export default connect(mapStateToProps, mapDispatchToProps)(AddTourForm);
+})(AddTourForm);

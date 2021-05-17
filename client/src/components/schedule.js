@@ -2,8 +2,6 @@ import React, { useState } from "react";
 import { DataGrid } from "@material-ui/data-grid";
 import { fetchTours } from "../redux/actions";
 import { useEffect } from "react";
-import compose from "../utils/compose";
-import withTourService from "../with-tour-service";
 import { connect } from "react-redux";
 import Spinner from "./spinner";
 import ErrorIndicator from "./error-indicator";
@@ -76,14 +74,7 @@ const mapStateToProps = ({ tours, loading, error }) => {
   };
 };
 
-const mapDispatchToProps = (dispatch, ownProps) => {
-  const { tourService } = ownProps;
-  return {
-    fetchTours: fetchTours(tourService, dispatch),
-  };
-};
 
-export default compose(
-  withTourService(),
-  connect(mapStateToProps, mapDispatchToProps)
-)(Schedule);
+export default 
+  connect(mapStateToProps, {fetchTours})
+(Schedule);

@@ -8,8 +8,6 @@ import { useParams } from "react-router-dom";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import { makeStyles } from "@material-ui/core/styles";
-import compose from "../utils/compose";
-import withTourService from "../with-tour-service";
 import Paper from "@material-ui/core/Paper";
 import moment from "moment";
 
@@ -244,16 +242,7 @@ const mapStateToProps = (store) => {
   return store;
 };
 
-const mapDispatchToProps = (dispatch, ownProps) => {
-  const { tourService } = ownProps;
-  return {
-    fetchEditTour: fetchEditTour(tourService, dispatch),
-    fetchTour: fetchTour(tourService, dispatch),
-    fetchTours: fetchTours(tourService, dispatch),
-  };
-};
 
-export default compose(
-  withTourService(),
-  connect(mapStateToProps, mapDispatchToProps)
-)(EditTourForm);
+export default 
+  connect(mapStateToProps, {fetchEditTour,fetchTour,fetchTours})
+(EditTourForm);

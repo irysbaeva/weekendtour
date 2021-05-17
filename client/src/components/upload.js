@@ -39,8 +39,6 @@ const mapStateToProps = ({ newTour }) => {
   };
 };
 
-const mapDispatchToProps = {
-  imageAdded,
-};
 
-export default connect(mapStateToProps, mapDispatchToProps)(UploadImage);
+
+export default connect(mapStateToProps, {imageAdded})(UploadImage);

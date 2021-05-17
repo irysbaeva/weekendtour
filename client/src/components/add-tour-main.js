@@ -10,8 +10,6 @@ import Typography from "@material-ui/core/Typography";
 import AddTourForm from "./add-tour-form";
 import AddTourReview from "./add-tour-review";
 import { connect } from "react-redux";
-import compose from "../utils/compose";
-import withTourService from "../with-tour-service";
 import { fetchNewTour } from "../redux/actions";
 
 const useStyles = makeStyles((theme) => ({
@@ -64,10 +62,15 @@ function getStepContent(step) {
 function AddTour({ newTour, fetchNewTour, currentUser, fetchTours }) {
   const classes = useStyles();
   const [activeStep, setActiveStep] = useState(0);
-  const isNextButtonDisabled = !newTour.title || !newTour.startDate || !newTour.endDate 
-    || !newTour.description || !newTour.price || !newTour.includes 
-    || !newTour.seats || !newTour.image
-
+  const isNextButtonDisabled =
+    !newTour.title ||
+    !newTour.startDate ||
+    !newTour.endDate ||
+    !newTour.description ||
+    !newTour.price ||
+    !newTour.includes ||
+    !newTour.seats ||
+    !newTour.image;
 
   const handleNext = () => {
     setActiveStep(activeStep + 1);
@@ -114,17 +117,17 @@ function AddTour({ newTour, fetchNewTour, currentUser, fetchTours }) {
                     onClick={() => {
                       handleNext();
                       if (activeStep === steps.length - 1) {
-                       fetchNewTour({
+                        fetchNewTour({
                           ...newTour,
                           company: currentUser.userId,
-                        })
+                        });
                         // .then((data) =>
                         //   console.log(data))
-                          // .catch((err) => console.log(err))
-                       
+                        // .catch((err) => console.log(err))
                       }
                     }}
-                    className={classes.button} disabled={isNextButtonDisabled}
+                    className={classes.button}
+                    disabled={isNextButtonDisabled}
                   >
                     {activeStep === steps.length - 1 ? "Добавить тур" : "Далее"}
                   </Button>
@@ -142,14 +145,4 @@ const mapStateToProps = ({ newTour, currentUser }) => {
   return { newTour, currentUser };
 };
 
-const mapDispatchToProps = (dispatch, ownProps) => {
-  const { tourService } = ownProps;
-  return {
-    fetchNewTour: fetchNewTour(tourService, dispatch),
-  };
-};
-
-export default compose(
-  withTourService(),
-  connect(mapStateToProps, mapDispatchToProps)
-)(AddTour);
+export default connect(mapStateToProps, { fetchNewTour })(AddTour);

@@ -12,17 +12,17 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 const checkAuth = require("./check-auth");
 
-
-app.use("/uploads", express.static("uploads"));
+app.use("/uploads", express.static("backend/uploads"));
 
 mongoose.connect(
-  process.env.MONGODB_URI || 
-  "mongodb+srv://irysya:sEX3ib8taYWQO8zH@cluster0.is0gy.mongodb.net/weekendtour?retryWrites=true&w=majority"
+  process.env.MONGODB_URI ||
+    "mongodb+srv://irysya:sEX3ib8taYWQO8zH@cluster0.is0gy.mongodb.net/weekendtour?retryWrites=true&w=majority",
   // "mongodb://localhost/tours"
-  , {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
+  {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  }
+);
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
@@ -63,9 +63,7 @@ app.delete("/tours/:id", checkAuth, (req, res) => {
   Tour.findById(id)
     .populate("company")
     .then((data) => {
-      console.log(`tour${JSON.stringify(data.company._id)}`);
       tourCreator = data.company._id;
-      console.log(`tourcr${tourCreator}`);
     });
 
   // if (req.userData.userId === req.body.editedTourData.company)
@@ -250,10 +248,10 @@ app.post("/login", (req, res) => {
     });
 });
 
-if(process.env.NODE_ENV ==="production") {
-  app.use(express.static("client/build"))
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static("client/build"));
 }
 
 app.listen(PORT, () => {
-  console.log("server is running");
+  console.log(`"server is running ${PORT}"`);
 });

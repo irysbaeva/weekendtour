@@ -73,10 +73,10 @@ const NavBar = ({ isLoggedin, logoutUser }) => {
   );
 };
 
-const mapStateToProps = (store) => {
-  return { isLoggedin: store.isLoggedin };
+const mapStateToProps = ({isLoggedin}) => {
+  return { isLoggedin };
 };
 
-const mapDispatchToProps = { logoutUser };
 
-export default connect(mapStateToProps, mapDispatchToProps)(NavBar);
+
+export default connect(mapStateToProps, { logoutUser })(NavBar);

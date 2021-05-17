@@ -14,11 +14,10 @@ import Container from "@material-ui/core/Container";
 import { fetchTours, addTourToBook } from "../redux/actions";
 import { useEffect } from "react";
 import { useHistory } from "react-router-dom";
-import compose from "../utils/compose";
-import withTourService from "../with-tour-service";
 import ErrorIndicator from "./error-indicator";
 import Spinner from "./spinner";
 import tourService from "../tour-service";
+import { options } from "../utils/constants";
 
 const useStyles = makeStyles((theme) => ({
   cardGrid: {
@@ -73,7 +72,7 @@ const Cards = (store) => {
     await tourService.deleteTour(id);
     await fetchTours();
   };
-
+  const baseUrl = options[process.env.NODE_ENV].baseURL;
   return (
     <Container className={classes.cardGrid} maxWidth="md">
       <Grid container spacing={4}>
@@ -83,7 +82,7 @@ const Cards = (store) => {
               <Card className={classes.card}>
                 <CardMedia
                   className={classes.cardMedia}
-                  image={`http://localhost:5000/${image}`}
+                  image={`${baseUrl}${image}`}
                   title="Image title"
                 />
 
@@ -156,25 +155,17 @@ const Cards = (store) => {
   );
 };
 
-function mapStateToProps(store) {
+function mapStateToProps({ tours, loading, error, isLoggedin, currentUser }) {
   return {
-    tours: store.tours,
-    loading: store.loading,
-    error: store.error,
-    isLoggedin: store.isLoggedin,
-    currentUser: store.currentUser,
+    tours,
+    loading,
+    error,
+    isLoggedin,
+    currentUser,
   };
 }
 
-const mapDispatchToProps = (dispatch, ownProps) => {
-  const { tourService } = ownProps;
-  return {
-    fetchTours: fetchTours(tourService, dispatch),
-    addTourToBook: (id) => dispatch(addTourToBook(id)),
-  };
-};
-
-export default compose(
-  withTourService(),
-  connect(mapStateToProps, mapDispatchToProps)
-)(Cards);
+export default connect(mapStateToProps, {
+  fetchTours,
+  addTourToBook,
+})(Cards);
