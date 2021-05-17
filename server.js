@@ -12,7 +12,7 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 const checkAuth = require("./check-auth");
 
-app.use("/uploads", express.static("backend/uploads"));
+app.use("/uploads", express.static("uploads"));
 
 mongoose.connect(
   process.env.MONGODB_URI ||
