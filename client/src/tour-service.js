@@ -27,7 +27,7 @@ const tourService = {
   deleteTour: (id) =>
     customInstance.delete(`tours/${id}`, { data: { _id: id } }),
   addUser: (data) => customInstance.post("api/signup", data),
-  login: (data) => customInstance.post("login", data),
+  login: (data) => customInstance.post("api/login", data),
   addBooking: (data) => customInstance.post("bookings", data),
   getBookings: () => customInstance.get("bookings"),
 };

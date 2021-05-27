@@ -38,7 +38,7 @@ export default function App() {
           <Route path="/login">
             <Login />
           </Route>
-          <Route path="/signup">
+          <Route path="/registration">
             <SignUp />
           </Route>
           <Route path="/bookings/new">
