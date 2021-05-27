@@ -177,7 +177,7 @@ app.post("/bookings", (req, res) => {
     });
 });
 
-app.post("/signup", (req, res) => {
+app.post("/api/signup", (req, res) => {
   User.find({ email: req.body.email })
     .exec()
     .then((user) => {
