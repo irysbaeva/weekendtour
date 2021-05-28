@@ -35,9 +35,9 @@ export default function App() {
           <Route path="/tours/:id/edit">
             <EditTourForm />
           </Route>
-          {/* <Route path="/login">
+          <Route path="/login">
             <Login />
-          </Route> */}
+          </Route>
           <Route path="/registration">
             <SignUp />
           </Route>
