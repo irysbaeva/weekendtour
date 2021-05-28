@@ -104,7 +104,7 @@ const Login = ({isLoggedin,fetchLogin}) => {
             </Button>
             <Grid container>
               <Grid item>
-                <Link href="/registration" variant="body2">
+                <Link to="/registration" variant="body2">
                   {"Зарегистрироваться"}
                 </Link>
               </Grid>
