@@ -84,7 +84,7 @@ app.delete("/tours/:id", checkAuth, (req, res) => {
 // });
 
 app.put("/tours/:id/edit", checkAuth, (req, res) => {
-  if (req.userData?.userId === req.body.editedTourData.company) {
+  if (req.userData.userId === req.body.editedTourData.company) {
     Tour.findByIdAndUpdate(
       req.params.id,
       { $set: req.body.editedTourData },
